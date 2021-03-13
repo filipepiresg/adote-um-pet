@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import Config from 'react-native-config';
+import Geocoder from 'react-native-geocoding';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import Geolocation from '@react-native-community/geolocation';
+
+import { Metrics } from '~/src/utils';
 
 import CustomMarker from './components/CustomMarker';
 import MAP_STYLES from './map_style.json';
@@ -20,6 +24,8 @@ const LOCATIONS = [
   },
 ];
 
+Geocoder.init(Config.GOOGLE_MAPS_API_KEY);
+
 const Map = () => {
   const [location, setLocation] = useState({
     latitude: REGION_DEFAULT.latitude,
@@ -31,13 +37,36 @@ const Map = () => {
   const handleLocation = useCallback(() => {
     Geolocation.getCurrentPosition(
       ({ coords }) => {
-        console.log('COORDS', coords);
-        setLocation(REGION_DEFAULT);
-        // setLocation({
-        //   ...info.coords,
-        //   latitude: info.coords.latitude,
-        //   longitude: info.coords.longitude,
-        // });
+        Geocoder.from({
+          lat: coords.latitude,
+          lng: coords.longitude,
+        }).then(
+          ({
+            status,
+            results: [
+              {
+                geometry: { location: geoLocation, bounds },
+              },
+            ],
+          }) => {
+            if (status === 'OK') {
+              const ASPECT_RATIO = Metrics.screenWidth / Metrics.screenHeight;
+
+              const latitude = parseFloat(geoLocation.lat);
+              const longitude = parseFloat(geoLocation.lng);
+              const northeastLat = parseFloat(bounds.northeast.lat);
+              const southwestLat = parseFloat(bounds.southwest.lat);
+              const latitudeDelta = northeastLat - southwestLat;
+              const longitudeDelta = latitudeDelta * ASPECT_RATIO;
+              setLocation({
+                latitude,
+                longitude,
+                latitudeDelta,
+                longitudeDelta,
+              });
+            }
+          }
+        );
       },
       () => {},
       {
@@ -127,6 +156,7 @@ const Map = () => {
         style={Styles.map}
         customMapStyle={MAP_STYLES}
         region={location}
+        initialRegion={REGION_DEFAULT}
       >
         {LOCATIONS.map((mark, index) => (
           <CustomMarker mark={mark} key={String(index)} />

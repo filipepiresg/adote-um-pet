@@ -1,14 +1,14 @@
 // import 'react-native-gesture-handler';
-import * as React from 'react';
+import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 
-import AppTab from './stacks/app';
+import AppStack from './stacks/app';
+import MainStack from './stacks/main';
 
-export default function App() {
+export default () => {
+  const isAuthenticated = false;
   return (
-    <NavigationContainer>
-      <AppTab />
-    </NavigationContainer>
+    <NavigationContainer>{isAuthenticated ? <AppStack /> : <MainStack />}</NavigationContainer>
   );
-}
+};
