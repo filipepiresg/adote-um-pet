@@ -57,8 +57,41 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - glog (0.3.5)
+  - Google-Maps-iOS-Utils (2.1.0):
+    - Google-Maps-iOS-Utils/Clustering (= 2.1.0)
+    - Google-Maps-iOS-Utils/Geometry (= 2.1.0)
+    - Google-Maps-iOS-Utils/Heatmap (= 2.1.0)
+    - Google-Maps-iOS-Utils/QuadTree (= 2.1.0)
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Clustering (2.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Geometry (2.1.0):
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Heatmap (2.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/QuadTree (2.1.0):
+    - GoogleMaps
+  - GoogleMaps (3.5.0):
+    - GoogleMaps/Maps (= 3.5.0)
+  - GoogleMaps/Base (3.5.0)
+  - GoogleMaps/Maps (3.5.0):
+    - GoogleMaps/Base
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.180)
+  - Permission-LocationAccuracy (3.0.1):
+    - RNPermissions
+  - Permission-LocationAlways (3.0.1):
+    - RNPermissions
+  - Permission-LocationWhenInUse (3.0.1):
+    - RNPermissions
+  - Permission-MediaLibrary (3.0.1):
+    - RNPermissions
+  - Permission-PhotoLibrary (3.0.1):
+    - RNPermissions
+  - Permission-PhotoLibraryAddOnly (3.0.1):
+    - RNPermissions
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -252,8 +285,16 @@ PODS:
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
   - React-jsinspector (0.64.0)
+  - react-native-geolocation (2.0.2):
+    - React
+  - react-native-google-maps (0.27.1):
+    - Google-Maps-iOS-Utils (= 2.1.0)
+    - GoogleMaps (= 3.5.0)
+    - React
   - react-native-maps (0.27.1):
     - React
+  - react-native-safe-area-context (3.2.0):
+    - React-Core
   - react-native-splash-screen (3.2.0):
     - React
   - React-perflogger (0.64.0)
@@ -324,6 +365,41 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.10):
     - React
+  - RNGestureHandler (1.10.3):
+    - React-Core
+  - RNPermissions (3.0.1):
+    - React-Core
+  - RNReanimated (2.0.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNScreens (2.18.1):
+    - React-Core
   - RNSVG (12.1.0):
     - React
   - RNVectorIcons (8.1.0):
@@ -356,6 +432,14 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (~> 0.75.1)
   - FlipperKit/SKIOSNetworkPlugin (~> 0.75.1)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Google-Maps-iOS-Utils
+  - GoogleMaps
+  - Permission-LocationAccuracy (from `../node_modules/react-native-permissions/ios/LocationAccuracy`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
+  - Permission-PhotoLibraryAddOnly (from `../node_modules/react-native-permissions/ios/PhotoLibraryAddOnly`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -369,7 +453,10 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
+  - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -385,6 +472,10 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -400,6 +491,8 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - Google-Maps-iOS-Utils
+    - GoogleMaps
     - libevent
     - OpenSSL-Universal
     - YogaKit
@@ -413,6 +506,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-LocationAccuracy:
+    :path: "../node_modules/react-native-permissions/ios/LocationAccuracy"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary"
+  Permission-PhotoLibraryAddOnly:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibraryAddOnly"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -435,8 +540,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
+  react-native-google-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
@@ -467,6 +578,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -488,8 +607,16 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 602921fee03edacf18f5d6f3d3594ba477f456e5
   FlipperKit: 8a20b5c5fcf9436cac58551dc049867247f64b00
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
+  GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
+  Permission-LocationAccuracy: 76669f87b4c276f5ae803cc0ddd1862a4c0e9dd8
+  Permission-LocationAlways: a274bc04bb386068782468dbdaca3859f51634ca
+  Permission-LocationWhenInUse: 3a2b0dbc167d79e8e920a4377ff9520cdc108407
+  Permission-MediaLibrary: 468eee83eb186823bb55b7252626539e0e4a2d97
+  Permission-PhotoLibrary: 29a07bdd077ae760363f73ab52d22a7b88cbd781
+  Permission-PhotoLibraryAddOnly: fa32d59bded28fe9f77519289ceba90df946382b
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 2f8cb5b7533219bf4218a045f92768129cf7050a
   RCTTypeSafety: 512728b73549e72ad7330b92f3d42936f2a4de5b
@@ -501,7 +628,10 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
+  react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
+  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
@@ -517,11 +647,15 @@ SPEC CHECKSUMS:
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNPermissions: 4c8a37b4dde50f1f152bf8cd08c4a43d2355829e
+  RNReanimated: 64f6c5789f82818c07ba3c71864b73619cb23c76
+  RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 12601019c0ece5645cfe279a4aca331a643cd78b
+PODFILE CHECKSUM: ca64ed8074f3ff9a73e26cd9d61a71aaef6f1be5
 
 COCOAPODS: 1.10.1
