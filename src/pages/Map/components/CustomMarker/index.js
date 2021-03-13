@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Callout, Marker as RNMarker } from 'react-native-maps';
 
 import PropTypes from 'prop-types';
@@ -30,4 +30,4 @@ Marker.propTypes = {
 };
 Marker.defaultProps = {};
 
-export default Marker;
+export default memo(Marker);

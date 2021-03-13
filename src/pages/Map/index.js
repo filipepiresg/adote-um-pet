@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import Config from 'react-native-config';
 import Geocoder from 'react-native-geocoding';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -7,9 +7,10 @@ import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-nati
 
 import Geolocation from '@react-native-community/geolocation';
 
-import { Metrics } from '~/src/utils';
+import { Colors, Metrics } from '~/src/utils';
 
 import CustomMarker from './components/CustomMarker';
+import EmptyMap from './components/EmptyMap';
 import MAP_STYLES from './map_style.json';
 import REGION_DEFAULT from './region_default.json';
 import Styles, { Container } from './styles';
@@ -27,6 +28,7 @@ const LOCATIONS = [
 Geocoder.init(Config.GOOGLE_MAPS_API_KEY);
 
 const Map = () => {
+  const [showMap, setShowMap] = useState({ loading: true, error: undefined });
   const [location, setLocation] = useState({
     latitude: REGION_DEFAULT.latitude,
     longitude: REGION_DEFAULT.longitude,
@@ -40,41 +42,54 @@ const Map = () => {
         Geocoder.from({
           lat: coords.latitude,
           lng: coords.longitude,
-        }).then(
-          ({
-            status,
-            results: [
-              {
-                geometry: { location: geoLocation, bounds },
-              },
-            ],
-          }) => {
-            if (status === 'OK') {
-              const ASPECT_RATIO = Metrics.screenWidth / Metrics.screenHeight;
+        })
+          .then(
+            ({
+              status,
+              results: [
+                {
+                  geometry: { location: geoLocation, viewport: bounds },
+                },
+              ],
+            }) => {
+              if (status === 'OK') {
+                const ASPECT_RATIO = Metrics.screenWidth / Metrics.screenHeight;
 
-              const latitude = parseFloat(geoLocation.lat);
-              const longitude = parseFloat(geoLocation.lng);
-              const northeastLat = parseFloat(bounds.northeast.lat);
-              const southwestLat = parseFloat(bounds.southwest.lat);
-              const latitudeDelta = northeastLat - southwestLat;
-              const longitudeDelta = latitudeDelta * ASPECT_RATIO;
-              setLocation({
-                latitude,
-                longitude,
-                latitudeDelta,
-                longitudeDelta,
-              });
+                const latitude = parseFloat(geoLocation.lat);
+                const longitude = parseFloat(geoLocation.lng);
+                const northeastLat = parseFloat(bounds.northeast.lat);
+                const southwestLat = parseFloat(bounds.southwest.lat);
+                const latitudeDelta = northeastLat - southwestLat;
+                const longitudeDelta = latitudeDelta * ASPECT_RATIO;
+                setLocation({
+                  latitude,
+                  longitude,
+                  latitudeDelta,
+                  longitudeDelta,
+                });
+                setShowMap({ ...showMap, loading: false });
+              }
             }
-          }
-        );
+          )
+          .catch((err) => {
+            setShowMap({
+              loading: false,
+              error: err,
+            });
+          });
       },
-      () => {},
+      ({ message }) => {
+        setShowMap({
+          loading: false,
+          error: message,
+        });
+      },
       {
         enableHighAccuracy: true,
         timeout: 20 * 1000,
       }
     );
-  }, []);
+  }, [showMap]);
 
   const requestPermissionIOS = useCallback(async () => {
     try {
@@ -83,7 +98,26 @@ const Map = () => {
       if (statuses[PERMISSIONS.IOS.LOCATION_ALWAYS] === RESULTS.GRANTED) {
         handleLocation();
       } else {
-        requestPermissionIOS();
+        Alert.alert(
+          'Permissão negada',
+          'É necessário permissão para determinar a sua localização no mapa',
+          [
+            {
+              onPress: requestPermissionIOS,
+              text: 'Pedir permissão',
+            },
+            {
+              onPress: () => {
+                setShowMap({
+                  loading: false,
+                  error: 'Permissão negada',
+                });
+              },
+              text: 'Cancelar',
+              style: 'cancel',
+            },
+          ]
+        );
       }
     } catch (err) {
       console.log('Error on request permissions', err);
@@ -112,7 +146,26 @@ const Map = () => {
       if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED) {
         handleLocation();
       } else {
-        requestPermissionAndroid();
+        Alert.alert(
+          'Permissão negada',
+          'É necessário permissão para determinar a sua localização no mapa',
+          [
+            {
+              onPress: requestPermissionAndroid,
+              text: 'Pedir permissão',
+            },
+            {
+              onPress: () => {
+                setShowMap({
+                  loading: false,
+                  error: 'Permissão negada',
+                });
+              },
+              text: 'Cancelar',
+              style: 'cancel',
+            },
+          ]
+        );
       }
     } catch (err) {
       console.log('Error on request permissions', err);
@@ -151,17 +204,24 @@ const Map = () => {
 
   return (
     <Container>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={Styles.map}
-        customMapStyle={MAP_STYLES}
-        region={location}
-        initialRegion={REGION_DEFAULT}
-      >
-        {LOCATIONS.map((mark, index) => (
-          <CustomMarker mark={mark} key={String(index)} />
-        ))}
-      </MapView>
+      {!showMap.loading && !showMap.error ? (
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={Styles.map}
+          customMapStyle={MAP_STYLES}
+          region={location}
+          initialRegion={REGION_DEFAULT}
+          loadingBackgroundColor={Colors.BACKGROUND}
+          loadingEnabled
+          loadingIndicatorColor={Colors.BLACK}
+        >
+          {LOCATIONS.map((mark, index) => (
+            <CustomMarker mark={mark} key={String(index)} />
+          ))}
+        </MapView>
+      ) : (
+        <EmptyMap data={showMap} />
+      )}
     </Container>
   );
 };
