@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "513109803323",
+    "firebase_url": "https://adotapet-ufcg.firebaseio.com",
+    "project_id": "adotapet-ufcg",
+    "storage_bucket": "adotapet-ufcg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513109803323:android:d5b80ef06ae3cddd89b71e",
+        "android_client_info": {
+          "package_name": "br.com.filipepiresg.adotepet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513109803323-n2pcdv98r7tsocsvp7nr8qcvu5mjanr4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxuY_lOlPTJ-F4aBApwdwvoveCVYeqeEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513109803323-n2pcdv98r7tsocsvp7nr8qcvu5mjanr4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "513109803323-7dp7e42cqk94imqmibr217tlqc39uh5e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.filipepiresg.adoteumpet"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

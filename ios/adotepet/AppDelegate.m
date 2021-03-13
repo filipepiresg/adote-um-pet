@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 
+#import "ReactNativeConfig.h"
+#import <Firebase.h>
 #import <GoogleMaps/GoogleMaps.h>
 
 #import <React/RCTBridge.h>
@@ -32,8 +34,13 @@ static void InitializeFlipper(UIApplication *application) {
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-
-  [GMSServices provideAPIKey:@"AIzaSyCKxKdA2_TH8FFgxYe5BOcFQKrxvswHujs"];
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
+  
+  NSString *googleMapsAPIKey = [ReactNativeConfig envFor:@"GOOGLE_MAPS_API_KEY"];
+  
+  [GMSServices provideAPIKey:googleMapsAPIKey];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
