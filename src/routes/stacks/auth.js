@@ -6,7 +6,19 @@ const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator>
-    <Stack.Screen component={() => null} name='SignIn' />
-    <Stack.Screen component={() => null} name='SignUp' />
+    <Stack.Screen
+      component={() => null}
+      name='SignIn'
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      component={() => null}
+      name='SignUp'
+      options={{
+        headerShown: false,
+      }}
+    />
   </Stack.Navigator>
 );
