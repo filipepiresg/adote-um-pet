@@ -10,6 +10,18 @@ const Container = styled.SafeAreaView`
   background-color: ${Colors.PRIMARY};
 `;
 
+const Item = styled.View`
+  padding: 10px;
+  padding-left: 15px;
+  opacity: ${(props) => (props.isActive ? 0.4 : 1)};
+`;
+
+const ItemTitle = styled.Text`
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+`;
+
 const Button = styled.TouchableOpacity.attrs({
   activeOpacity: 0.8,
 })`
@@ -21,6 +33,7 @@ const Button = styled.TouchableOpacity.attrs({
   align-self: center;
   border-radius: 8px;
 `;
+
 const ButtonTitle = styled.Text`
   color: ${Colors.WHITE};
   font-size: 16px;

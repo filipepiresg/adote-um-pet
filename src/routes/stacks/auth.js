@@ -2,12 +2,14 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { SignIn } from '~/src/pages';
+
 const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator>
     <Stack.Screen
-      component={() => null}
+      component={SignIn}
       name='SignIn'
       options={{
         headerShown: false,
