@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import styled from 'styled-components/native';
 
-import { Colors } from '../utils';
+import { Colors } from '~/src/utils';
 
 const Container = styled.View`
   background-color: ${Colors.PRIMARY};
