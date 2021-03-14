@@ -21,7 +21,7 @@ const Content = styled.View`
 `;
 
 const Title = styled.Text`
-  color: ${Colors.BLACK};
+  color: ${Colors.BUTTON};
   font-size: 18px;
   text-align: center;
   font-weight: bold;
@@ -44,7 +44,7 @@ const HeaderCustom = ({ title }) => {
           navigation.toggleDrawer();
         }}
       >
-        <Ionicons name='menu-sharp' size={24} color={Colors.BLACK} />
+        <Ionicons name='menu-sharp' size={24} color={Colors.BUTTON} />
       </Pressable>
       <Content>
         <Title>{title}</Title>
