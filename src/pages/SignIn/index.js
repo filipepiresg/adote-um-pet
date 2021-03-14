@@ -6,9 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { Input } from '~/src/components';
+import { Button, Input } from '~/src/components';
 
-import { Container, Content, Button, ButtonTitle, Message } from './styles';
+import { Container, Content, Message } from './styles';
 
 const SCHEMA = Yup.object({
   email: Yup.string().email('E-mail inválido').required('E-mail deve ser preenchido'),
@@ -70,9 +70,7 @@ const SignIn = () => {
           secureTextEntry
           onSubmitEditing={formik.submitForm}
         />
-        <Button onPress={formik.submitForm}>
-          <ButtonTitle>Logar</ButtonTitle>
-        </Button>
+        <Button onPress={formik.submitForm}>Logar</Button>
       </Content>
       <Pressable
         onPress={() => {
