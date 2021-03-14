@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
-import Config from 'react-native-config';
 import Geocoder from 'react-native-geocoding';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -24,8 +23,6 @@ const LOCATIONS = [
     coordinate: REGION_DEFAULT,
   },
 ];
-
-Geocoder.init(Config.GOOGLE_MAPS_API_KEY);
 
 const Map = () => {
   const [showMap, setShowMap] = useState({ loading: true, error: undefined });
