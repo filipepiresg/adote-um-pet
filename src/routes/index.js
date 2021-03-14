@@ -3,7 +3,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Drawer as CustomDrawer } from '~/src/Components';
+import { Drawer as CustomDrawer } from '~/src/components';
 
 import AppStack from './stacks/app';
 import AuthStack from './stacks/auth';

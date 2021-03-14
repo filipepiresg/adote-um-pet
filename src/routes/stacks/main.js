@@ -2,7 +2,7 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Header } from '~/src/Components';
+import { Header } from '~/src/components';
 import { Map } from '~/src/pages';
 
 const Stack = createStackNavigator();
