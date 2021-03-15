@@ -21,6 +21,7 @@ export const Message = styled.Text`
   color: ${Colors.BLACK};
   text-align: center;
   font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
+  text-decoration-line: ${(props) => (props.isBold ? 'underline' : 'none')};
 `;
 
 export default StyleSheet.create({

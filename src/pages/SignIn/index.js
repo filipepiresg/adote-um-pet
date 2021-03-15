@@ -80,7 +80,7 @@ const SignIn = () => {
             });
           }}
         >
-          <Message>Continuar sem logar</Message>
+          <Message isBold>Continuar sem logar</Message>
         </Pressable>
       </Content>
       <Pressable

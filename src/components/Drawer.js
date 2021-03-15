@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ScrollView } from 'react-native';
 
 import styled from 'styled-components/native';
 
-import { isAuthenticated } from '~/app.json';
+import UserContext from '~/src/contexts/user';
 import { Colors } from '~/src/utils';
 
 const Container = styled.SafeAreaView`
@@ -46,38 +46,44 @@ const ButtonTitle = styled.Text`
 
 const ITEMS = [{ route: 'Main', title: 'Home' }];
 
-const CustomDrawer = ({ navigation, state }) => (
-  <Container>
-    <ScrollView showsVerticalScrollIndicator={false}>
-      {isAuthenticated &&
-        ITEMS.map((item, index) => (
-          <Item
-            key={String(index)}
-            isActive={state.index === index}
-            onPress={() => {
-              if (item.route) navigation.navigate(item.route);
-            }}
-          >
-            <ItemTitle>{item.title}</ItemTitle>
-          </Item>
-        ))}
-    </ScrollView>
-    {isAuthenticated ? (
-      <Button>
-        <ButtonTitle>Fazer logout</ButtonTitle>
-      </Button>
-    ) : (
-      <Button
-        onPress={() => {
-          navigation.reset({
-            routes: [{ name: 'Auth' }],
-          });
-        }}
-      >
-        <ButtonTitle>Fazer login</ButtonTitle>
-      </Button>
-    )}
-  </Container>
-);
+const CustomDrawer = ({ navigation, state }) => {
+  const {
+    state: { isAuthenticated },
+  } = useContext(UserContext);
+
+  return (
+    <Container>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {isAuthenticated &&
+          ITEMS.map((item, index) => (
+            <Item
+              key={String(index)}
+              isActive={state.index === index}
+              onPress={() => {
+                if (item.route) navigation.navigate(item.route);
+              }}
+            >
+              <ItemTitle>{item.title}</ItemTitle>
+            </Item>
+          ))}
+      </ScrollView>
+      {isAuthenticated ? (
+        <Button>
+          <ButtonTitle>Fazer logout</ButtonTitle>
+        </Button>
+      ) : (
+        <Button
+          onPress={() => {
+            navigation.reset({
+              routes: [{ name: 'Auth' }],
+            });
+          }}
+        >
+          <ButtonTitle>Fazer login</ButtonTitle>
+        </Button>
+      )}
+    </Container>
+  );
+};
 
 export default CustomDrawer;
