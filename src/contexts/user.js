@@ -16,7 +16,11 @@ const UserContext = createContext({
 });
 
 export const UserProvider = ({ children }) => {
-  const [state, setState] = useState(INITIAL_STATE);
+  const [state, setState] = useState({
+    ...INITIAL_STATE,
+    isAuthenticated: !!auth().currentUser,
+    user: auth().currentUser,
+  });
 
   const handleLogin = ({ email, password }, successCallback = null, failureCallback = null) => {
     auth()
