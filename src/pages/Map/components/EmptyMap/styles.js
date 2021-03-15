@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 
 import { Colors } from '~/src/utils';
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${Colors.BACKGROUND};
   align-items: center;
