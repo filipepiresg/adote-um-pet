@@ -3,7 +3,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { get } from 'lodash';
-import { transparentize } from 'polished';
+import { lighten, transparentize } from 'polished';
 import styled from 'styled-components/native';
 
 import { Colors } from '../utils';
@@ -26,7 +26,7 @@ const Item = styled.TouchableOpacity.attrs({
 `;
 
 const ContentIcon = styled.View`
-  background-color: ${(props) => transparentize(props.isActive ? 0.2 : 0, Colors.BUTTON)};
+  background-color: ${(props) => lighten(props.isActive ? 0.15 : 0, Colors.BUTTON)};
   align-items: center;
   justify-content: center;
   height: 60px;
@@ -71,8 +71,8 @@ const CustomTab = ({ state, navigation }) => {
   const routeNames = useMemo(() => get(state, 'routeNames', []), [state]);
 
   const handlePress = useCallback(
-    (index) => {
-      navigation.jumpTo(routeNames[index], {});
+    (index, params = {}) => {
+      navigation.jumpTo(routeNames[index], params);
     },
     [navigation, routeNames]
   );
