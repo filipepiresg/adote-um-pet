@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 
 import { Button, Input } from '~/src/components';
 
-import { Container, Content, Message } from './styles';
+import Styles, { Container, Content, Message } from './styles';
 
 const SCHEMA = Yup.object({
   email: Yup.string().email('E-mail inválido').required('E-mail deve ser preenchido'),
@@ -70,7 +70,18 @@ const SignIn = () => {
           secureTextEntry
           onSubmitEditing={formik.submitForm}
         />
-        <Button onPress={formik.submitForm}>Logar</Button>
+        <Button onPress={formik.submitForm} style={Styles.button}>
+          Logar
+        </Button>
+        <Pressable
+          onPress={() => {
+            navigation.reset({
+              routes: [{ name: 'Main' }],
+            });
+          }}
+        >
+          <Message>Continuar sem logar</Message>
+        </Pressable>
       </Content>
       <Pressable
         onPress={() => {

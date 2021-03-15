@@ -1,4 +1,5 @@
 {
   "name": "adotepet",
-  "displayName": "adotepet"
+  "displayName": "adotepet",
+  "isAuthenticated": true
 }

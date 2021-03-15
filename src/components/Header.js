@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useNavigation } from '@react-navigation/native';
 
+import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 
 import { Colors } from '~/src/utils';
@@ -33,19 +34,23 @@ const EmptyIcon = styled.View`
   height: 24px;
 `;
 
-const HeaderCustom = ({ title }) => {
+const HeaderCustom = ({ title, hasLeftIcon = true }) => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
   return (
     <Container topInset={insets.top}>
-      <Pressable
-        onPress={() => {
-          navigation.toggleDrawer();
-        }}
-      >
-        <Ionicons name='menu-sharp' size={24} color={Colors.BUTTON} />
-      </Pressable>
+      {hasLeftIcon ? (
+        <Pressable
+          onPress={() => {
+            navigation.toggleDrawer();
+          }}
+        >
+          <Ionicons name='menu-sharp' size={24} color={Colors.BUTTON} />
+        </Pressable>
+      ) : (
+        <EmptyIcon />
+      )}
       <Content>
         <Title>{title}</Title>
       </Content>
@@ -54,4 +59,12 @@ const HeaderCustom = ({ title }) => {
   );
 };
 
-export default HeaderCustom;
+HeaderCustom.propTypes = {
+  title: PropTypes.string.isRequired,
+  hasLeftIcon: PropTypes.bool,
+};
+HeaderCustom.defaultProps = {
+  hasLeftIcon: true,
+};
+
+export default memo(HeaderCustom);

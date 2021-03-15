@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 
 import styled from 'styled-components/native';
 
+import { isAuthenticated } from '~/app.json';
 import { Colors } from '~/src/utils';
 
 const Container = styled.SafeAreaView`
@@ -10,7 +11,9 @@ const Container = styled.SafeAreaView`
   background-color: ${Colors.PRIMARY};
 `;
 
-const Item = styled.View`
+const Item = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.8,
+})`
   padding: 10px;
   padding-left: 15px;
   opacity: ${(props) => (props.isActive ? 0.4 : 1)};
@@ -41,23 +44,39 @@ const ButtonTitle = styled.Text`
   text-align: center;
 `;
 
-const ITEMS = [
-  { route: 'Main', title: 'Home' },
-  { route: 'Auth', title: 'Login' },
-];
+const ITEMS = [{ route: 'Main', title: 'Home' }];
 
-const CustomDrawer = ({ navigation }) => (
+const CustomDrawer = ({ navigation, state }) => (
   <Container>
-    <ScrollView showsVerticalScrollIndicator={false} />
-    <Button
-      onPress={() => {
-        navigation.reset({
-          routes: [{ name: ITEMS[1].route }],
-        });
-      }}
-    >
-      <ButtonTitle>Fazer login</ButtonTitle>
-    </Button>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      {isAuthenticated &&
+        ITEMS.map((item, index) => (
+          <Item
+            key={String(index)}
+            isActive={state.index === index}
+            onPress={() => {
+              if (item.route) navigation.navigate(item.route);
+            }}
+          >
+            <ItemTitle>{item.title}</ItemTitle>
+          </Item>
+        ))}
+    </ScrollView>
+    {isAuthenticated ? (
+      <Button>
+        <ButtonTitle>Fazer logout</ButtonTitle>
+      </Button>
+    ) : (
+      <Button
+        onPress={() => {
+          navigation.reset({
+            routes: [{ name: 'Auth' }],
+          });
+        }}
+      >
+        <ButtonTitle>Fazer login</ButtonTitle>
+      </Button>
+    )}
   </Container>
 );
 

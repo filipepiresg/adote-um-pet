@@ -1,3 +1,5 @@
+import { StyleSheet } from 'react-native';
+
 import styled from 'styled-components/native';
 
 import { Colors } from '~/src/utils';
@@ -20,3 +22,9 @@ export const Message = styled.Text`
   text-align: center;
   font-weight: ${(props) => (props.isBold ? 'bold' : 'normal')};
 `;
+
+export default StyleSheet.create({
+  button: {
+    marginBottom: 20,
+  },
+});
