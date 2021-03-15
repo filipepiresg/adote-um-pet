@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 
 import styled from 'styled-components/native';
@@ -48,8 +48,23 @@ const ITEMS = [{ route: 'Main', title: 'Home' }];
 
 const CustomDrawer = ({ navigation, state }) => {
   const {
-    state: { isAuthenticated },
+    state: { isAuthenticated: stateIsAuthenticated },
+    handleLogout: handleLogoutState,
   } = useContext(UserContext);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(stateIsAuthenticated);
+
+  useEffect(() => {
+    setIsAuthenticated(stateIsAuthenticated);
+  }, [stateIsAuthenticated]);
+
+  const handleLogout = useCallback(() => {
+    handleLogoutState(() => {
+      navigation.reset({
+        routes: [{ name: 'Main' }],
+      });
+    });
+  }, [handleLogoutState, navigation]);
 
   return (
     <Container>
@@ -68,7 +83,7 @@ const CustomDrawer = ({ navigation, state }) => {
           ))}
       </ScrollView>
       {isAuthenticated ? (
-        <Button>
+        <Button onPress={handleLogout}>
           <ButtonTitle>Fazer logout</ButtonTitle>
         </Button>
       ) : (

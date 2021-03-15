@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import { Pressable } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { Button, Input } from '~/src/components';
+import UserContext from '~/src/contexts/user';
 
 import Styles, { Container, Content, Message } from './styles';
 
@@ -21,17 +22,26 @@ const SCHEMA = Yup.object({
 const SignIn = () => {
   const navigation = useNavigation();
 
+  const { handleLogin } = useContext(UserContext);
+
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = useCallback(({ email, password }) => {
-    console.log(email, password);
-  }, []);
+  const handleSubmit = useCallback(
+    ({ email, password }) => {
+      handleLogin({ email, password }, () => {
+        navigation.reset({
+          routes: [{ name: 'App' }],
+        });
+      });
+    },
+    [handleLogin, navigation]
+  );
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: __DEV__ ? 'filipepiresg@gmail.com' : '',
+      password: __DEV__ ? 'lipe2106' : '',
     },
     onSubmit: handleSubmit,
     validationSchema: SCHEMA,
