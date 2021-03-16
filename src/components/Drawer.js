@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 
 import styled from 'styled-components/native';
@@ -44,7 +44,8 @@ const ButtonTitle = styled.Text`
   text-align: center;
 `;
 
-const ITEMS = [{ route: 'Main', title: 'Home' }];
+const ITEMS_AUTHENTICATED = [{ route: 'Main', title: 'Home' }];
+const ITEMS = [{ route: 'Pets', title: 'Pets para adoção' }];
 
 const CustomDrawer = ({ navigation, state }) => {
   const {
@@ -53,6 +54,8 @@ const CustomDrawer = ({ navigation, state }) => {
   } = useContext(UserContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(stateIsAuthenticated);
+
+  const items = useMemo(() => (isAuthenticated ? ITEMS_AUTHENTICATED : ITEMS), [isAuthenticated]);
 
   useEffect(() => {
     setIsAuthenticated(stateIsAuthenticated);
@@ -69,34 +72,31 @@ const CustomDrawer = ({ navigation, state }) => {
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {isAuthenticated &&
-          ITEMS.map((item, index) => (
-            <Item
-              key={String(index)}
-              isActive={state.index === index}
-              onPress={() => {
-                if (item.route) navigation.navigate(item.route);
-              }}
-            >
-              <ItemTitle>{item.title}</ItemTitle>
-            </Item>
-          ))}
+        {items.map((item, index) => (
+          <Item
+            key={String(index)}
+            isActive={state.index === index}
+            onPress={() => {
+              if (item.route) navigation.navigate(item.route);
+            }}
+          >
+            <ItemTitle>{item.title}</ItemTitle>
+          </Item>
+        ))}
       </ScrollView>
-      {isAuthenticated ? (
-        <Button onPress={handleLogout}>
-          <ButtonTitle>Fazer logout</ButtonTitle>
-        </Button>
-      ) : (
-        <Button
-          onPress={() => {
+      <Button
+        onPress={() => {
+          if (isAuthenticated) {
+            handleLogout();
+          } else {
             navigation.reset({
               routes: [{ name: 'Auth' }],
             });
-          }}
-        >
-          <ButtonTitle>Fazer login</ButtonTitle>
-        </Button>
-      )}
+          }
+        }}
+      >
+        <ButtonTitle>{isAuthenticated ? 'Fazer logout' : 'Fazer login'}</ButtonTitle>
+      </Button>
     </Container>
   );
 };
