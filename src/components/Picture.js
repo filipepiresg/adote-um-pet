@@ -25,8 +25,8 @@ const Picture = ({ source, defaultPicture = null, styleImage = {} }) => (
 );
 
 Picture.protoTypes = {
-  source: PropTypes.oneOfType([PropTypes.object, null]),
-  defaultPicture: PropTypes.oneOfType([PropTypes.number, null]),
+  source: PropTypes.oneOf([PropTypes.object, null]),
+  defaultPicture: PropTypes.oneOf([PropTypes.number, null]),
   styleImage: PropTypes.object,
 };
 
