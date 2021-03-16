@@ -4,3 +4,4 @@ export { default as SignUp } from './SignUp';
 export { default as Profile } from './Profile';
 export { default as Add } from './Add';
 export { default as Splash } from './Splash';
+export { default as Pets } from './Pets';

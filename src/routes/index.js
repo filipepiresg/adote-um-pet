@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { Drawer as CustomDrawer } from '~/src/components';
-import { Splash } from '~/src/pages';
+import { Splash, Pets } from '~/src/pages';
 
 import AppStack from './stacks/app';
 import AuthStack from './stacks/auth';
@@ -29,6 +29,7 @@ export default () => (
       <Drawer.Screen name='App' component={AppStack} />
       <Drawer.Screen name='Main' component={MainStack} />
       <Drawer.Screen name='Auth' component={AuthStack} />
+      <Drawer.Screen name='Pets' component={Pets} />
     </Drawer.Navigator>
   </NavigationContainer>
 );
