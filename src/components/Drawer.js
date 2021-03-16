@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
+import { transparentize } from 'polished';
 import styled from 'styled-components/native';
 
 import UserContext from '~/src/contexts/user';
@@ -21,6 +22,7 @@ const Item = styled.TouchableOpacity.attrs({
   opacity: ${(props) => (props.isActive ? 0.4 : 1)};
   flex-direction: row;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 const ItemTitle = styled.Text`
@@ -59,25 +61,36 @@ const styles = StyleSheet.create({
 
 const ITEMS_AUTHENTICATED = [
   {
-    route: 'Main',
+    route: 'App',
     title: 'Home',
-    Icon: () => <SimpleLineIcons name='home' size={20} style={styles.icon} />,
+    Icon: () => (
+      <Entypo name='home' size={20} style={styles.icon} color={transparentize(0.3, Colors.BLACK)} />
+    ),
   },
 ];
 const ITEMS = [
   {
     route: 'Main',
     title: 'Mapa',
-    Icon: () => <SimpleLineIcons name='home' size={20} style={styles.icon} />,
+    Icon: () => (
+      <Entypo name='home' size={20} style={styles.icon} color={transparentize(0.3, Colors.BLACK)} />
+    ),
   },
   {
     route: 'Pets',
     title: 'Pets para adoção',
-    Icon: () => <MaterialIcons name='pets' size={20} style={styles.icon} />,
+    Icon: () => (
+      <MaterialIcons
+        name='pets'
+        size={20}
+        style={styles.icon}
+        color={transparentize(0.3, Colors.BLACK)}
+      />
+    ),
   },
 ];
 
-const CustomDrawer = ({ navigation, state }) => {
+const CustomDrawer = ({ navigation }) => {
   const {
     state: { isAuthenticated: stateIsAuthenticated },
     handleLogout: handleLogoutState,
@@ -105,7 +118,7 @@ const CustomDrawer = ({ navigation, state }) => {
         {items.map(({ Icon, ...item }, index) => (
           <Item
             key={String(index)}
-            isActive={state.index === index}
+            // isActive={state.routeNames[state.index] === item.route}
             onPress={() => {
               if (item.route) navigation.navigate(item.route);
             }}
