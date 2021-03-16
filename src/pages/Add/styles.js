@@ -13,6 +13,7 @@ export const Container = styled.ScrollView.attrs({
     paddingBottom: 20,
   },
 })`
+  padding-top: 10px;
   background-color: ${Colors.BACKGROUND};
 `;
 
