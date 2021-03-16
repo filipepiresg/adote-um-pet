@@ -17,8 +17,8 @@ const SCHEMA = Yup.object({
   name: Yup.string().required('Necessário preencher esse campo'),
   address: Yup.string().required('Necessário preencher esse campo'),
   phone: Yup.string()
-    .min(10, 'Telefone inválido')
-    .max(11, 'Telefone inválido')
+    .min(14, 'Telefone inválido')
+    .max(15, 'Telefone inválido')
     .required('Necessário preencher esse campo'),
   description: Yup.string()
     .max(250, 'Descrição deve conter até 250 caracteres')
