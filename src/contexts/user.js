@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 const INITIAL_STATE = {
   loading: false,
   isAuthenticated: false,
+  profile: null,
   user: null,
 };
 const UserContext = createContext({
@@ -20,34 +21,64 @@ export const UserProvider = ({ children }) => {
     ...INITIAL_STATE,
     isAuthenticated: !!auth().currentUser,
     user: auth().currentUser,
+    profile: null,
   });
 
-  const handleLogin = ({ email, password }, successCallback = null, failureCallback = null) => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(({ user }) => {
-        setState({
-          isAuthenticated: true,
-          loading: false,
-          user,
+  useEffect(() => {
+    let result = () => {};
+
+    if (state.user?.uid) {
+      result = firestore()
+        .collection('users')
+        .doc(state.user.uid)
+        .onSnapshot(
+          (snap) => {
+            const profile = snap.data();
+
+            setState({ ...state, profile: profile ?? null });
+          },
+          (error) => {
+            console.log('Error on get profile data', error.message);
+          }
+        );
+    } else {
+      setState({ ...state, profile: null });
+    }
+
+    return () => result();
+  }, [state.user]);
+
+  const handleLogin = useCallback(
+    ({ email, password }, successCallback = null, failureCallback = null) => {
+      auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(({ user }) => {
+          setState({
+            isAuthenticated: true,
+            loading: false,
+            profile: null,
+            user,
+          });
+
+          if (successCallback) successCallback();
+        })
+        .catch((error) => {
+          console.log('Error on login', error);
+
+          if (failureCallback) failureCallback();
         });
+    },
+    []
+  );
 
-        if (successCallback) successCallback();
-      })
-      .catch((error) => {
-        console.log('Error on login', error);
-
-        if (failureCallback) failureCallback();
-      });
-  };
-
-  const handleLogout = (successCallback = null, failureCallback = null) => {
+  const handleLogout = useCallback((successCallback = null, failureCallback = null) => {
     auth()
       .signOut()
       .then(() => {
         setState({
           isAuthenticated: false,
           loading: false,
+          profile: null,
           user: null,
         });
 
@@ -58,9 +89,9 @@ export const UserProvider = ({ children }) => {
 
         if (failureCallback) failureCallback();
       });
-  };
+  }, []);
 
-  const handleRegister = (payload, successCallback = null, failureCallback = null) => {
+  const handleRegister = useCallback((payload, successCallback = null, failureCallback = null) => {
     auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(({ user }) => {
@@ -75,6 +106,7 @@ export const UserProvider = ({ children }) => {
             setState({
               isAuthenticated: true,
               loading: false,
+              profile: null,
               user,
             });
 
@@ -86,7 +118,7 @@ export const UserProvider = ({ children }) => {
 
         if (failureCallback) failureCallback();
       });
-  };
+  }, []);
 
   return (
     <UserContext.Provider
