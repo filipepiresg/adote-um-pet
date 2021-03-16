@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
@@ -163,90 +163,88 @@ const Profile = () => {
     <>
       <Header title='Perfil' />
       <Container>
-        <KeyboardAvoidingView behavior='padding' enabled={Platform.OS === 'ios'}>
-          <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
-            <Pressable
-              onPress={() => {
-                photoRef.current?.show();
-              }}
-            >
-              <Picture
-                source={photo}
-                defaultPicture={DefaultProfilePicture}
-                styleImage={Styles.picture}
-              />
-            </Pressable>
-          </ImagePicker>
-
-          <Input
-            editable={!isBlocked}
-            ref={nameRef}
-            title='Nome da organização'
-            styleInput={Styles.input}
-            value={formik.values.name}
-            error={formik.touched.name ? formik.errors.name : undefined}
-            onChangeText={formik.handleChange('name')}
-            onSubmitEditing={() => {
-              phoneRef.current?.focus();
+        <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
+          <Pressable
+            onPress={() => {
+              photoRef.current?.show();
             }}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            returnKeyType='next'
-          />
+          >
+            <Picture
+              source={photo}
+              defaultPicture={DefaultProfilePicture}
+              styleImage={Styles.picture}
+            />
+          </Pressable>
+        </ImagePicker>
 
-          <Input
-            editable={!isBlocked}
-            ref={phoneRef}
-            title='Telefone da organização'
-            styleInput={Styles.input}
-            value={MaskService.toMask('cel-phone', formik.values.phone, CELPHONE_OPTIONS)}
-            error={formik.touched.phone ? formik.errors.phone : undefined}
-            onChangeText={formik.handleChange('phone')}
-            onSubmitEditing={() => {
-              descriptionRef.current?.focus();
-            }}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            returnKeyType='next'
-          />
+        <Input
+          editable={!isBlocked}
+          ref={nameRef}
+          title='Nome da organização'
+          styleInput={Styles.input}
+          value={formik.values.name}
+          error={formik.touched.name ? formik.errors.name : undefined}
+          onChangeText={formik.handleChange('name')}
+          onSubmitEditing={() => {
+            phoneRef.current?.focus();
+          }}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='next'
+        />
 
-          <Input
-            editable={!isBlocked}
-            ref={addressRef}
-            title='Endereço da organização'
-            styleInput={Styles.input}
-            value={formik.values.address}
-            error={formik.touched.address ? formik.errors.address : undefined}
-            onChangeText={formik.handleChange('address')}
-            onSubmitEditing={() => {
-              descriptionRef.current?.focus();
-            }}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            returnKeyType='next'
-          />
+        <Input
+          editable={!isBlocked}
+          ref={phoneRef}
+          title='Telefone da organização'
+          styleInput={Styles.input}
+          value={MaskService.toMask('cel-phone', formik.values.phone, CELPHONE_OPTIONS)}
+          error={formik.touched.phone ? formik.errors.phone : undefined}
+          onChangeText={formik.handleChange('phone')}
+          onSubmitEditing={() => {
+            addressRef.current?.focus();
+          }}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='next'
+        />
 
-          <Input
-            editable={!isBlocked}
-            ref={descriptionRef}
-            title='Descrição da organização'
-            multiline
-            numberOfLines={4}
-            styleInput={Styles.input}
-            value={formik.values.description}
-            error={formik.touched.description ? formik.errors.description : undefined}
-            onChangeText={formik.handleChange('description')}
-            onSubmitEditing={formik.submitForm}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            returnKeyType='send'
-            textAlignVertical='top'
-          />
-        </KeyboardAvoidingView>
+        <Input
+          editable={!isBlocked}
+          ref={addressRef}
+          title='Endereço da organização'
+          styleInput={Styles.input}
+          value={formik.values.address}
+          error={formik.touched.address ? formik.errors.address : undefined}
+          onChangeText={formik.handleChange('address')}
+          onSubmitEditing={() => {
+            descriptionRef.current?.focus();
+          }}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='next'
+        />
+
+        <Input
+          editable={!isBlocked}
+          ref={descriptionRef}
+          title='Descrição da organização'
+          multiline
+          numberOfLines={4}
+          styleInput={Styles.input}
+          value={formik.values.description}
+          error={formik.touched.description ? formik.errors.description : undefined}
+          onChangeText={formik.handleChange('description')}
+          onSubmitEditing={formik.submitForm}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='send'
+          textAlignVertical='top'
+        />
 
         <Button
           disabled={loading}

@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { transparentize } from 'polished';
 import styled from 'styled-components/native';
 
 import { Colors } from '~/src/utils';
 
-export const Container = styled.ScrollView.attrs({
+export const Container = styled(KeyboardAwareScrollView).attrs({
   showsVerticalScrollIndicator: false,
   keyboardShouldPersistTaps: 'handled',
   contentContainerStyle: {

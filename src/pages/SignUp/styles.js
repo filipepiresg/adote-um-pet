@@ -1,3 +1,5 @@
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import styled from 'styled-components/native';
 
 import { Colors } from '~/src/utils';
@@ -7,7 +9,7 @@ export const Container = styled.SafeAreaView`
   background-color: ${Colors.PRIMARY};
 `;
 
-export const Content = styled.ScrollView.attrs({
+export const Content = styled(KeyboardAwareScrollView).attrs({
   showsVerticalScrollIndicator: false,
 })`
   padding: 10px;

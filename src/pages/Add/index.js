@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -74,107 +74,106 @@ const Add = () => {
     <>
       <Header title='Adicionar pet' />
       <Container>
-        <KeyboardAvoidingView behavior='padding' enabled={Platform.OS === 'ios'}>
-          <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
-            <Pressable
-              onPress={() => {
-                photoRef.current?.show();
-              }}
-            >
-              <Picture
-                source={photo}
-                defaultPicture={DefaultPetPicture}
-                styleImage={Styles.picture}
-              />
-            </Pressable>
-          </ImagePicker>
-
-          <Input
-            editable={!loading}
-            ref={typeRef}
-            title='Tipo de animal'
-            styleInput={Styles.input}
-            value={formik.values.type}
-            error={formik.touched.type ? formik.errors.type : undefined}
-            onChangeText={formik.handleChange('type')}
-            onSubmitEditing={() => {
-              nameRef.current?.focus();
+        <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
+          <Pressable
+            onPress={() => {
+              photoRef.current?.show();
             }}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            placeholder='Tipo do pet'
-            returnKeyType='next'
-          />
+          >
+            <Picture
+              source={photo}
+              defaultPicture={DefaultPetPicture}
+              styleImage={Styles.picture}
+            />
+          </Pressable>
+        </ImagePicker>
 
-          <Input
-            editable={!loading}
-            ref={nameRef}
-            title='Nome'
-            styleInput={Styles.input}
-            value={formik.values.name}
-            error={formik.touched.name ? formik.errors.name : undefined}
-            onChangeText={formik.handleChange('name')}
-            onSubmitEditing={() => {
-              ageRef.current?.focus();
-            }}
-            autoCapitalize='words'
-            autoCorrect={false}
-            keyboardType='default'
-            placeholder='Nome do pet'
-            returnKeyType='next'
-          />
+        <Input
+          editable={!loading}
+          ref={typeRef}
+          title='Tipo de animal'
+          styleInput={Styles.input}
+          value={formik.values.type}
+          error={formik.touched.type ? formik.errors.type : undefined}
+          onChangeText={formik.handleChange('type')}
+          onSubmitEditing={() => {
+            nameRef.current?.focus();
+          }}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          placeholder='Tipo do pet'
+          returnKeyType='next'
+        />
 
-          <Input
-            editable={!loading}
-            ref={ageRef}
-            title='Idade'
-            styleInput={Styles.input}
-            value={formik.values.age}
-            error={formik.touched.age ? formik.errors.age : undefined}
-            onChangeText={formik.handleChange('age')}
-            onSubmitEditing={() => {
-              breedRef.current?.focus();
-            }}
-            keyboardType='numeric'
-            placeholder='Idade do pet (em anos)'
-            returnKeyType='next'
-          />
+        <Input
+          editable={!loading}
+          ref={nameRef}
+          title='Nome'
+          styleInput={Styles.input}
+          value={formik.values.name}
+          error={formik.touched.name ? formik.errors.name : undefined}
+          onChangeText={formik.handleChange('name')}
+          onSubmitEditing={() => {
+            ageRef.current?.focus();
+          }}
+          autoCapitalize='words'
+          autoCorrect={false}
+          keyboardType='default'
+          placeholder='Nome do pet'
+          returnKeyType='next'
+        />
 
-          <Input
-            editable={!loading}
-            ref={breedRef}
-            title='Raça'
-            styleInput={Styles.input}
-            value={formik.values.breed}
-            error={formik.touched.breed ? formik.errors.breed : undefined}
-            onChangeText={formik.handleChange('breed')}
-            onSubmitEditing={() => {
-              descriptionRef.current?.focus();
-            }}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            placeholder='Raça do pet'
-            returnKeyType='next'
-          />
+        <Input
+          editable={!loading}
+          ref={ageRef}
+          title='Idade'
+          styleInput={Styles.input}
+          value={formik.values.age}
+          error={formik.touched.age ? formik.errors.age : undefined}
+          onChangeText={formik.handleChange('age')}
+          onSubmitEditing={() => {
+            breedRef.current?.focus();
+          }}
+          keyboardType='numeric'
+          placeholder='Idade do pet (em anos)'
+          returnKeyType='next'
+          autoCorrect={false}
+        />
 
-          <Input
-            editable={!loading}
-            ref={descriptionRef}
-            title='Descrição'
-            styleInput={Styles.input}
-            value={formik.values.description}
-            error={formik.touched.description ? formik.errors.description : undefined}
-            onChangeText={formik.handleChange('description')}
-            onSubmitEditing={formik.submitForm}
-            autoCapitalize='sentences'
-            autoCorrect
-            keyboardType='default'
-            placeholder='Descrição do pet'
-            returnKeyType='send'
-          />
-        </KeyboardAvoidingView>
+        <Input
+          editable={!loading}
+          ref={breedRef}
+          title='Raça'
+          styleInput={Styles.input}
+          value={formik.values.breed}
+          error={formik.touched.breed ? formik.errors.breed : undefined}
+          onChangeText={formik.handleChange('breed')}
+          onSubmitEditing={() => {
+            descriptionRef.current?.focus();
+          }}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          placeholder='Raça do pet'
+          returnKeyType='next'
+        />
+
+        <Input
+          editable={!loading}
+          ref={descriptionRef}
+          title='Descrição'
+          styleInput={Styles.input}
+          value={formik.values.description}
+          error={formik.touched.description ? formik.errors.description : undefined}
+          onChangeText={formik.handleChange('description')}
+          onSubmitEditing={formik.submitForm}
+          autoCapitalize='sentences'
+          autoCorrect={false}
+          keyboardType='default'
+          placeholder='Descrição do pet'
+          returnKeyType='send'
+        />
         <Button onPress={formik.submitForm}>Enviar dados</Button>
       </Container>
     </>
