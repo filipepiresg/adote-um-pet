@@ -12,7 +12,7 @@ const Container = styled.SafeAreaView`
   background-color: ${Colors.PRIMARY};
 `;
 const Content = styled.View`
-  padding: 10px 0 0;
+  padding: 10px 0;
   flex-direction: row;
 `;
 
