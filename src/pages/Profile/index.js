@@ -2,6 +2,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from 'react';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import Geocoder from 'react-native-geocoding';
+import { MaskService } from 'react-native-masked-text';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -17,6 +18,12 @@ import Styles, { Container } from './styles';
 const SCHEMA = Yup.object({
   name: Yup.string().required(),
 });
+
+const CELPHONE_OPTIONS = {
+  maskType: 'BRL',
+  withDDD: true,
+  dddMask: '(99) ',
+};
 
 const Profile = () => {
   const {
@@ -175,7 +182,7 @@ const Profile = () => {
             ref={phoneRef}
             title='Telefone da organização'
             styleInput={Styles.input}
-            value={formik.values.phone}
+            value={MaskService.toMask('cel-phone', formik.values.phone, CELPHONE_OPTIONS)}
             error={formik.touched.phone ? formik.errors.phone : undefined}
             onChangeText={formik.handleChange('phone')}
             onSubmitEditing={() => {
