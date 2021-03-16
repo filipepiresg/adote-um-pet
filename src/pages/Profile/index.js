@@ -6,6 +6,7 @@ import Geocoder from 'react-native-geocoding';
 import firestore from '@react-native-firebase/firestore';
 
 import { useFormik } from 'formik';
+import { get } from 'lodash';
 import * as Yup from 'yup';
 
 import { Header, Input, Button } from '~/src/components';
@@ -66,65 +67,73 @@ const Profile = () => {
           },
         ] = results.filter(({ types }) => types.includes('street_address'));
 
-        firestore()
-          .collection('users')
-          .doc(user.uid)
-          .set({
-            name,
-            phone,
-            description,
-            coordinate: {
-              latitude: location.lat,
-              longitude: location.lng,
-            },
-          })
-          .then(() => {
-            formik.setFieldValue('address', formatted_address);
-
-            Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
-              {
-                text: 'OK',
-                onPress: () => {
-                  setIsEditable(false);
-
-                  setLoading(false);
-                },
+        if (user?.uid)
+          firestore()
+            .collection('users')
+            .doc(user.uid)
+            .set({
+              name,
+              phone,
+              description,
+              coordinate: {
+                latitude: location.lat,
+                longitude: location.lng,
               },
-            ]);
-          })
-          .catch((error) => {
-            console.log('Error on update profile', error);
+            })
+            .then(() => {
+              formik.setFieldValue('address', formatted_address);
 
-            Alert.alert(
-              'Ocorreu um problema ao atualizar seu perfil',
-              'Tente novamente em instantes',
-              [
+              Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
                 {
                   text: 'OK',
                   onPress: () => {
+                    setIsEditable(false);
+
                     setLoading(false);
                   },
                 },
-              ]
-            );
-          });
+              ]);
+            })
+            .catch((error) => {
+              console.log('Error on update profile', error);
+
+              Alert.alert(
+                'Ocorreu um problema ao atualizar seu perfil',
+                'Tente novamente em instantes',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      setLoading(false);
+                    },
+                  },
+                ]
+              );
+            });
       } else {
         setLoading(false);
       }
     },
-    [formik, user.uid]
+    [formik, user]
   );
 
   const formik = useFormik({
     initialValues: {
-      name: profile.name,
-      description: profile.description,
-      phone: profile.phone,
+      name: get(profile, 'name', ''),
+      description: get(profile, 'description', ''),
+      phone: get(profile, 'phone', ''),
       address: '',
     },
     validationSchema: SCHEMA,
     onSubmit: handleSubmit,
   });
+
+  useEffect(() => {
+    formik.setFieldValue('name', get(profile, 'name', ''));
+    formik.setFieldValue('description', get(profile, 'description', ''));
+    formik.setFieldValue('phone', get(profile, 'phone', ''));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
 
   useEffect(() => {
     async function getAddress() {
@@ -137,6 +146,7 @@ const Profile = () => {
     }
 
     getAddress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
