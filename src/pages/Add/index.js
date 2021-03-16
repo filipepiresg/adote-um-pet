@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -7,7 +7,8 @@ import { useFormik } from 'formik';
 import { get } from 'lodash';
 import * as Yup from 'yup';
 
-import { Header, Input, Button } from '~/src/components';
+import { DefaultPetPicture } from '~/src/assets/images';
+import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
 
 import Styles, { Container } from './styles';
 
@@ -27,12 +28,14 @@ const SCHEMA = Yup.object({
 
 const Add = () => {
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(null);
 
   const nameRef = useRef();
   const typeRef = useRef();
   const ageRef = useRef();
   const breedRef = useRef();
   const descriptionRef = useRef();
+  const photoRef = useRef();
 
   const handleSubmit = useCallback((values, { resetForm }) => {
     setLoading(true);
@@ -69,9 +72,23 @@ const Add = () => {
 
   return (
     <>
-      <Header title='Adicionar pet' hasLeftIcon={false} />
+      <Header title='Adicionar pet' />
       <Container>
         <KeyboardAvoidingView behavior='padding' enabled={Platform.OS === 'ios'}>
+          <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
+            <Pressable
+              onPress={() => {
+                photoRef.current?.show();
+              }}
+            >
+              <Picture
+                source={photo}
+                defaultPicture={DefaultPetPicture}
+                styleImage={Styles.picture}
+              />
+            </Pressable>
+          </ImagePicker>
+
           <Input
             editable={!loading}
             ref={typeRef}

@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from 'react';
-import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
@@ -10,7 +10,8 @@ import { useFormik } from 'formik';
 import { get } from 'lodash';
 import * as Yup from 'yup';
 
-import { Header, Input, Button } from '~/src/components';
+import { DefaultProfilePicture } from '~/src/assets/images';
+import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
 import UserContext from '~/src/contexts/user';
 
 import Styles, { Container } from './styles';
@@ -32,6 +33,7 @@ const Profile = () => {
 
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(profile?.picture ? { uri: profile.picture } : null);
 
   const isBlocked = useMemo(() => !isEditable || loading, [isEditable, loading]);
 
@@ -39,6 +41,7 @@ const Profile = () => {
   const phoneRef = useRef();
   const descriptionRef = useRef();
   const addressRef = useRef();
+  const photoRef = useRef();
 
   const handleGeolocation = useCallback(
     async (latitude = 0, longitude = 0) => {
@@ -161,6 +164,20 @@ const Profile = () => {
       <Header title='Perfil' />
       <Container>
         <KeyboardAvoidingView behavior='padding' enabled={Platform.OS === 'ios'}>
+          <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
+            <Pressable
+              onPress={() => {
+                photoRef.current?.show();
+              }}
+            >
+              <Picture
+                source={photo}
+                defaultPicture={DefaultProfilePicture}
+                styleImage={Styles.picture}
+              />
+            </Pressable>
+          </ImagePicker>
+
           <Input
             editable={!isBlocked}
             ref={nameRef}
@@ -177,6 +194,7 @@ const Profile = () => {
             keyboardType='default'
             returnKeyType='next'
           />
+
           <Input
             editable={!isBlocked}
             ref={phoneRef}
@@ -193,6 +211,7 @@ const Profile = () => {
             keyboardType='default'
             returnKeyType='next'
           />
+
           <Input
             editable={!isBlocked}
             ref={addressRef}
@@ -209,6 +228,7 @@ const Profile = () => {
             keyboardType='default'
             returnKeyType='next'
           />
+
           <Input
             editable={!isBlocked}
             ref={descriptionRef}
@@ -227,6 +247,7 @@ const Profile = () => {
             textAlignVertical='top'
           />
         </KeyboardAvoidingView>
+
         <Button
           disabled={loading}
           onPress={() => {

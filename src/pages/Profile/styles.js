@@ -21,4 +21,7 @@ export default StyleSheet.create({
   input: {
     backgroundColor: transparentize(0.9, Colors.BLACK),
   },
+  picture: {
+    marginBottom: 30,
+  },
 });

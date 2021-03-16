@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useRef } from 'react';
-import { Alert } from 'react-native';
+import React, { useCallback, useContext, useRef, useState } from 'react';
+import { Alert, Pressable } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
@@ -8,7 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, Input } from '~/src/components';
+import { DefaultProfilePicture } from '~/src/assets/images';
+import { Button, Input, ImagePicker, Picture } from '~/src/components';
 import UserContext from '~/src/contexts/user';
 
 import { Container, Content } from './styles';
@@ -40,12 +41,15 @@ const SignUp = () => {
   const navigation = useNavigation();
   const { handleRegister } = useContext(UserContext);
 
+  const [photo, setPhoto] = useState(null);
+
   const nameRef = useRef();
   const addressRef = useRef();
   const phoneRef = useRef();
   const descriptionRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const photoRef = useRef();
 
   const handleSubmit = useCallback(
     (values) => {
@@ -117,6 +121,16 @@ const SignUp = () => {
   return (
     <Container>
       <Content>
+        <ImagePicker ref={photoRef} changePhoto={setPhoto} image={photo}>
+          <Pressable
+            onPress={() => {
+              photoRef.current?.show();
+            }}
+          >
+            <Picture source={photo} defaultPicture={DefaultProfilePicture} />
+          </Pressable>
+        </ImagePicker>
+
         <Input
           ref={nameRef}
           title='Nome'
@@ -130,6 +144,7 @@ const SignUp = () => {
           placeholder='Digite o nome da instituição'
           returnKeyType='next'
         />
+
         <Input
           ref={addressRef}
           title='Endereço'
@@ -143,12 +158,12 @@ const SignUp = () => {
           placeholder='Rua principal, 00, Campina Grande-PB'
           returnKeyType='next'
         />
+
         <Input
           ref={phoneRef}
           title='Telefone'
           error={formik.touched.phone ? formik.errors.phone : undefined}
           value={MaskService.toMask('cel-phone', formik.values.phone, CELPHONE_OPTIONS)}
-          // onChangeText={formik.handleChange('phone')}
           onChangeText={formik.handleChange('phone')}
           maxLength={15}
           onSubmitEditing={() => descriptionRef.current?.focus()}
@@ -158,6 +173,7 @@ const SignUp = () => {
           placeholder='(00) 00000-0000'
           returnKeyType='next'
         />
+
         <Input
           ref={descriptionRef}
           title='Descrição'
@@ -172,6 +188,7 @@ const SignUp = () => {
           placeholder='Digite a descrição da instituição'
           returnKeyType='next'
         />
+
         <Input
           ref={emailRef}
           title='E-mail da conta'
@@ -185,6 +202,7 @@ const SignUp = () => {
           placeholder='example@mail.com'
           returnKeyType='next'
         />
+
         <Input
           ref={passwordRef}
           title='Senha da conta'
@@ -199,6 +217,7 @@ const SignUp = () => {
           secureTextEntry
           returnKeyType='done'
         />
+
         <Button onPress={formik.handleSubmit}>Cadastrar</Button>
       </Content>
     </Container>
