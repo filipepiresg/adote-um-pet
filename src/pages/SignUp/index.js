@@ -1,10 +1,15 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
+import { Alert } from 'react-native';
+import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
+
+import { useNavigation } from '@react-navigation/native';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { Button, Input } from '~/src/components';
+import UserContext from '~/src/contexts/user';
 
 import { Container, Content } from './styles';
 
@@ -32,6 +37,9 @@ const CELPHONE_OPTIONS = {
 };
 
 const SignUp = () => {
+  const navigation = useNavigation();
+  const { handleRegister } = useContext(UserContext);
+
   const nameRef = useRef();
   const addressRef = useRef();
   const phoneRef = useRef();
@@ -39,9 +47,58 @@ const SignUp = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = useCallback((values) => {
-    console.log(values);
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      Geocoder.from(values.address).then(({ results, status }) => {
+        if (status === 'OK') {
+          const [
+            {
+              geometry: { location },
+            },
+          ] = results.filter(({ types }) => types.includes('street_address'));
+
+          handleRegister(
+            {
+              coordinate: {
+                latitude: location.lat,
+                longitude: location.lng,
+              },
+              ...values,
+            },
+            () => {
+              Alert.alert('Conta criada com sucesso', null, [
+                {
+                  onPress: () => {
+                    navigation.reset({
+                      routes: [{ name: 'App' }],
+                    });
+                  },
+                  text: 'OK',
+                },
+              ]);
+            },
+            () => {
+              Alert.alert('Aconteceu um problema', 'Não foi possível criar a conta', [
+                {
+                  text: 'OK',
+                },
+              ]);
+            }
+          );
+        } else {
+          Alert.alert('Aconteceu um problema', 'Não foi possível encontrar sua localização', [
+            {
+              text: 'OK',
+              onPress: () => {
+                addressRef.current?.focus();
+              },
+            },
+          ]);
+        }
+      });
+    },
+    [handleRegister, navigation]
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -83,7 +140,7 @@ const SignUp = () => {
           autoCorrect={false}
           autoCapitalize='none'
           keyboardType='default'
-          placeholder='Rua principal, 00, campina grande'
+          placeholder='Rua principal, 00, Campina Grande-PB'
           returnKeyType='next'
         />
         <Input
@@ -92,10 +149,7 @@ const SignUp = () => {
           error={formik.touched.phone ? formik.errors.phone : undefined}
           value={MaskService.toMask('cel-phone', formik.values.phone, CELPHONE_OPTIONS)}
           // onChangeText={formik.handleChange('phone')}
-          onChangeText={(text) => {
-            const phone = MaskService.toRawValue('cel-phone', text, CELPHONE_OPTIONS);
-            formik.setFieldValue('phone', phone);
-          }}
+          onChangeText={formik.handleChange('phone')}
           maxLength={15}
           onSubmitEditing={() => descriptionRef.current?.focus()}
           autoCorrect={false}

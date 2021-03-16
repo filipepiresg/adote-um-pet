@@ -99,8 +99,10 @@ export const UserProvider = ({ children }) => {
           .collection('users')
           .doc(user.uid)
           .set({
-            id: user.uid,
-            ...payload,
+            coordinate: payload.coordinate,
+            description: payload.description,
+            name: payload.name,
+            phone: payload.phone,
           })
           .then(() => {
             setState({
