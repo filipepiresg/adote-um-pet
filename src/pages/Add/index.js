@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Pressable } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 
 import { DefaultPetPicture } from '~/src/assets/images';
 import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
+import UserContext from '~/src/contexts/user';
 
 import Styles, { Container } from './styles';
 
@@ -27,6 +28,10 @@ const SCHEMA = Yup.object({
 });
 
 const Add = () => {
+  const {
+    state: { profile, user },
+  } = useContext(UserContext);
+
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -37,25 +42,33 @@ const Add = () => {
   const descriptionRef = useRef();
   const photoRef = useRef();
 
-  const handleSubmit = useCallback((values, { resetForm }) => {
-    setLoading(true);
+  const handleSubmit = useCallback(
+    (values, { resetForm }) => {
+      setLoading(true);
 
-    firestore()
-      .collection('pets')
-      .add({
-        ...values,
-        description: get(values, 'description', 'Não possui descrição'),
-      })
-      .then(() => {
-        resetForm();
-      })
-      .catch((error) => {
-        console.log('Error on create pet', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+      firestore()
+        .collection('pets')
+        .add({
+          ...values,
+          description: get(values, 'description', 'Não possui descrição'),
+          organization: {
+            name: profile?.name || 'Sem nome',
+            phone: profile?.phone || 'Sem telefone',
+            email: user?.email || 'Sem e-mail',
+          },
+        })
+        .then(() => {
+          resetForm();
+        })
+        .catch((error) => {
+          console.log('Error on create pet', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [profile, user]
+  );
 
   const formik = useFormik({
     initialValues: {
