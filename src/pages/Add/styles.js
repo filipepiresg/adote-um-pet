@@ -8,9 +8,12 @@ import { Colors } from '~/src/utils';
 export const Container = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
   keyboardShouldPersistTaps: 'handled',
+  contentContainerStyle: {
+    paddingHorizontal: 10,
+    paddingBottom: 20,
+  },
 })`
   background-color: ${Colors.BACKGROUND};
-  padding: 10px 10px 20px;
 `;
 
 export default StyleSheet.create({
