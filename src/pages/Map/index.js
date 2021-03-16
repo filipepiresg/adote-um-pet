@@ -5,6 +5,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import Geolocation from '@react-native-community/geolocation';
+import firestore from '@react-native-firebase/firestore';
 
 import { Colors, Metrics } from '~/src/utils';
 
@@ -14,17 +15,8 @@ import MAP_STYLES from './map_style.json';
 import REGION_DEFAULT from './region_default.json';
 import Styles, { Container } from './styles';
 
-const LOCATIONS = [
-  {
-    title: 'ONG',
-    phone: '(83) 98729-3710',
-    description:
-      'ola, somos uma ong que tenta o resgate de todos os animais, e iniciamos para adoção ',
-    coordinate: REGION_DEFAULT,
-  },
-];
-
 const Map = () => {
+  const [locations, setLocations] = useState([]);
   const [showMap, setShowMap] = useState({ loading: true, error: undefined });
   const [location, setLocation] = useState({
     latitude: REGION_DEFAULT.latitude,
@@ -32,6 +24,23 @@ const Map = () => {
     latitudeDelta: REGION_DEFAULT.latitudeDelta,
     longitudeDelta: REGION_DEFAULT.longitudeDelta,
   });
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('users')
+      .onSnapshot(
+        ({ docs = [] }) => {
+          const LOCATIONS = docs.filter((doc) => doc.exists).map((doc) => doc.data());
+
+          setLocations(LOCATIONS);
+        },
+        (error) => {
+          console.log('Error on get users', error);
+        }
+      );
+
+    return () => subscriber();
+  }, []);
 
   const handleLocation = useCallback(() => {
     Geolocation.getCurrentPosition(
@@ -212,7 +221,7 @@ const Map = () => {
           loadingEnabled
           loadingIndicatorColor={Colors.BLACK}
         >
-          {LOCATIONS.map((mark, index) => (
+          {locations.map((mark, index) => (
             <CustomMarker mark={mark} key={String(index)} />
           ))}
         </MapView>

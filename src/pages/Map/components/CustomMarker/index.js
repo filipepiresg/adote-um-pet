@@ -9,7 +9,7 @@ const Marker = ({ mark }) => (
   <RNMarker coordinate={{ ...mark.coordinate }}>
     <Callout tooltip>
       <Container>
-        <Title>{mark.title}</Title>
+        <Title>{mark.name}</Title>
         <Phone>{mark.phone}</Phone>
         <Description>{mark.description}</Description>
       </Container>
@@ -23,7 +23,7 @@ Marker.propTypes = {
       latitude: PropTypes.number,
       longitude: PropTypes.number,
     }),
-    title: PropTypes.string,
+    name: PropTypes.string,
     description: PropTypes.string,
     phone: PropTypes.string,
   }).isRequired,
