@@ -28,4 +28,7 @@ export default StyleSheet.create({
   button: {
     marginBottom: 20,
   },
+  icon: {
+    alignSelf: 'center',
+  },
 });

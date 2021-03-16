@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import { LogoColored } from '~/src/assets/icons';
 import { Button, Input } from '~/src/components';
 import UserContext from '~/src/contexts/user';
 
@@ -50,6 +51,8 @@ const SignIn = () => {
 
   return (
     <Container>
+      <LogoColored width={80} height={80} style={Styles.icon} />
+
       <Content>
         <Input
           error={formik.touched.email ? formik.errors.email : undefined}
