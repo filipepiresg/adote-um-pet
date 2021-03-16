@@ -80,14 +80,21 @@ export const Type = styled.Text.attrs({
   font-size: 13px;
 `;
 
-export const CallPhone = styled.Text``;
+export const CallPhone = styled.Text`
+  color: ${Colors.BLACK};
+  font-size: 11px;
+`;
 
-export const OrganizationName = styled.Text`
+export const OrganizationName = styled.Text.attrs({
+  numberOfLines: 1,
+})`
   font-size: 16px;
   color: ${Colors.BLACK};
 `;
 
-export const OrganizationEmail = styled.Text`
+export const OrganizationEmail = styled.Text.attrs({
+  numberOfLines: 1,
+})`
   font-size: 12px;
 
   color: ${transparentize(0.4, Colors.BLACK)};

@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, useMemo, memo } from 'react';
 import { Pressable, Linking, Alert, Platform } from 'react-native';
 
 import { get } from 'lodash';
@@ -21,19 +21,21 @@ import {
 } from './styles';
 
 const CardPet = ({ data }) => {
-  const callPhone = useCallback((phone) => {
-    let phoneNumber = phone.replace(/\W/g, '');
+  const phoneNumber = useMemo(() => get(data, 'organization,phone', '').replace(/\W/g, ''), [data]);
+
+  const callPhone = useCallback(() => {
+    let _phoneNumber = phoneNumber;
 
     if (Platform.OS !== 'android') {
-      phoneNumber = `telprompt:${phone}`;
+      _phoneNumber = `telprompt:${_phoneNumber}`;
     } else {
-      phoneNumber = `tel:${phone}`;
+      _phoneNumber = `tel:${_phoneNumber}`;
     }
 
-    Linking.canOpenURL(phoneNumber)
+    Linking.canOpenURL(_phoneNumber)
       .then((supported) => {
         if (supported) {
-          Linking.openURL(phoneNumber);
+          Linking.openURL(_phoneNumber);
         } else {
           Alert.alert(
             'Ocorreu um erro ao fazer a ligação',
@@ -44,7 +46,7 @@ const CardPet = ({ data }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [phoneNumber]);
 
   return (
     <>
@@ -67,17 +69,25 @@ const CardPet = ({ data }) => {
       </Container>
       <Pressable
         onPress={() => {
-          if (data?.organization?.phone) callPhone(data.organization.phone);
+          if (String(phoneNumber)) {
+            callPhone();
+          }
         }}
       >
         <Container inverted>
           <Content>
-            <OrganizationName>{get(data, 'organization.name', '')}</OrganizationName>
-            <OrganizationEmail>{get(data, 'organization.email', '')}</OrganizationEmail>
+            <OrganizationName>
+              {get(data, 'organization.name', 'Sem nome da organização')}
+            </OrganizationName>
+            <OrganizationEmail>
+              {get(data, 'organization.email', 'Sem e-mail da organização')}
+            </OrganizationEmail>
           </Content>
-          <CallContent>
-            <CallPhone>Ligar para a organização</CallPhone>
-          </CallContent>
+          {!!String(phoneNumber) && (
+            <CallContent>
+              <CallPhone>Ligar para a organização</CallPhone>
+            </CallContent>
+          )}
         </Container>
       </Pressable>
     </>
