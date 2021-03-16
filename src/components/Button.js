@@ -14,6 +14,7 @@ const Button = styled.TouchableOpacity.attrs({
   justify-content: center;
   align-self: center;
   border-radius: ${(props) => (props.isFull ? 0 : 8)}px;
+  margin-bottom: 10px;
 `;
 
 const ButtonTitle = styled.Text`
