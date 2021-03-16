@@ -26,6 +26,8 @@ const Input = styled.TextInput.attrs({
 })`
   color: ${Colors.BLACK};
   font-size: 16px;
+  height: ${(props) =>
+    props.multiline && props.numberOfLines > 1 ? `${props.numberOfLines * 30}px` : 'auto'};
   padding: 10px;
   border-radius: 6px;
   background-color: ${(props) => (props.hasError ? Colors.TERTIARY : lighten(0.2, Colors.PRIMARY))};
