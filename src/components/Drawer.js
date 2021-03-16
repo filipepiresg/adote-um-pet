@@ -1,5 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import styled from 'styled-components/native';
 
@@ -17,12 +19,15 @@ const Item = styled.TouchableOpacity.attrs({
   padding: 10px;
   padding-left: 15px;
   opacity: ${(props) => (props.isActive ? 0.4 : 1)};
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ItemTitle = styled.Text`
   text-align: left;
   font-size: 14px;
   font-weight: 500;
+  margin-left: 10px;
 `;
 
 const Button = styled.TouchableOpacity.attrs({
@@ -35,6 +40,7 @@ const Button = styled.TouchableOpacity.attrs({
   justify-content: center;
   align-self: center;
   border-radius: 8px;
+  margin-bottom: 10px;
 `;
 
 const ButtonTitle = styled.Text`
@@ -44,8 +50,32 @@ const ButtonTitle = styled.Text`
   text-align: center;
 `;
 
-const ITEMS_AUTHENTICATED = [{ route: 'Main', title: 'Home' }];
-const ITEMS = [{ route: 'Pets', title: 'Pets para adoção' }];
+const styles = StyleSheet.create({
+  icon: {
+    width: 20,
+    height: 20,
+  },
+});
+
+const ITEMS_AUTHENTICATED = [
+  {
+    route: 'Main',
+    title: 'Home',
+    Icon: () => <SimpleLineIcons name='home' size={20} style={styles.icon} />,
+  },
+];
+const ITEMS = [
+  {
+    route: 'Main',
+    title: 'Mapa',
+    Icon: () => <SimpleLineIcons name='home' size={20} style={styles.icon} />,
+  },
+  {
+    route: 'Pets',
+    title: 'Pets para adoção',
+    Icon: () => <MaterialIcons name='pets' size={20} style={styles.icon} />,
+  },
+];
 
 const CustomDrawer = ({ navigation, state }) => {
   const {
@@ -72,7 +102,7 @@ const CustomDrawer = ({ navigation, state }) => {
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {items.map((item, index) => (
+        {items.map(({ Icon, ...item }, index) => (
           <Item
             key={String(index)}
             isActive={state.index === index}
@@ -80,6 +110,7 @@ const CustomDrawer = ({ navigation, state }) => {
               if (item.route) navigation.navigate(item.route);
             }}
           >
+            <Icon />
             <ItemTitle>{item.title}</ItemTitle>
           </Item>
         ))}
