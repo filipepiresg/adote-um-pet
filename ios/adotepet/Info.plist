@@ -54,6 +54,12 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>$(PRODUCT_NAME) precisa usar para definir seu gosto musical</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
+  <key>NSCameraUsageDescription</key>
+  <string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
   <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
   <string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
   <key>NSLocationAlwaysUsageDescription</key>
