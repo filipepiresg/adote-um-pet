@@ -3,7 +3,7 @@ const { getDefaultConfig } = require('metro-config');
 module.exports = (async () => {
   const {
     resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig(__dirname);
+  } = await getDefaultConfig();
   return {
     transformer: {
       getTransformOptions: async () => ({
