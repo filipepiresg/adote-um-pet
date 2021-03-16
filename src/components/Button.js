@@ -23,9 +23,16 @@ const ButtonTitle = styled.Text`
   text-align: center;
 `;
 
-const CustomButton = ({ children, onPress = () => {}, full, ...props }) => (
-  <Button onPress={onPress} {...props} isFull={full}>
-    <ButtonTitle>{children}</ButtonTitle>
+const CustomButton = ({
+  children,
+  onPress = () => {},
+  full,
+  styleButton = {},
+  styleTitle = {},
+  ...props
+}) => (
+  <Button style={styleButton} onPress={onPress} {...props} isFull={full}>
+    <ButtonTitle style={styleTitle}>{children}</ButtonTitle>
   </Button>
 );
 

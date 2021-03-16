@@ -31,12 +31,14 @@ const Input = styled.TextInput.attrs({
   background-color: ${(props) => (props.hasError ? Colors.TERTIARY : lighten(0.2, Colors.PRIMARY))};
 `;
 
-const CustomInput = forwardRef(({ title, error, ...props }, ref) => (
-  <Container>
-    <Title>{title}</Title>
-    <Input {...props} hasError={!!error} ref={ref} />
-    <ErrorMessage>{error || ' '}</ErrorMessage>
-  </Container>
-));
+const CustomInput = forwardRef(
+  ({ title, error, styleInput = {}, styleTitle = {}, ...props }, ref) => (
+    <Container>
+      <Title style={styleTitle}>{title}</Title>
+      <Input {...props} hasError={!!error} ref={ref} style={styleInput} />
+      <ErrorMessage>{error || ' '}</ErrorMessage>
+    </Container>
+  )
+);
 
 export default CustomInput;
