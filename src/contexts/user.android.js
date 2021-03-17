@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
+import OneSignal from 'react-native-onesignal';
 
 import analytics from '@react-native-firebase/analytics';
 import auth from '@react-native-firebase/auth';
@@ -49,6 +50,8 @@ export const UserProvider = ({ children }) => {
     } else {
       setState({ ...state, profile: null });
     }
+
+    OneSignal.sendTag('user_type', state.user ? 'organization' : 'normal');
 
     return () => result();
   }, [state.user]);
