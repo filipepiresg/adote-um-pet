@@ -29,6 +29,9 @@ const SCHEMA = Yup.object({
     .min(4, 'Senha deve conter mais de 3 caracteres')
     .max(8, 'Senha deve conter menos de 9 caracteres')
     .required('Necessário preencher esse campo'),
+  passwordConfirm: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'As senhas precisam ser iguais')
+    .required('Necessário preencher esse campo'),
 });
 
 const CELPHONE_OPTIONS = {
@@ -49,6 +52,7 @@ const SignUp = () => {
   const descriptionRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
   const photoRef = useRef();
 
   const handleSubmit = useCallback(
@@ -113,6 +117,7 @@ const SignUp = () => {
       description: '',
       email: '',
       password: '',
+      passwordConfirm: '',
     },
     enableReinitialize: true,
     validationSchema: SCHEMA,
@@ -210,6 +215,23 @@ const SignUp = () => {
           error={formik.touched.password ? formik.errors.password : undefined}
           value={formik.values.password}
           onChangeText={formik.handleChange('password')}
+          onSubmitEditing={() => {
+            passwordConfirmRef.current?.focus();
+          }}
+          autoCorrect={false}
+          autoCapitalize='none'
+          keyboardType='default'
+          placeholder='•••••'
+          secureTextEntry
+          returnKeyType='done'
+        />
+
+        <Input
+          ref={passwordConfirmRef}
+          title='Confirme sua senha'
+          error={formik.touched.passwordConfirm ? formik.errors.passwordConfirm : undefined}
+          value={formik.values.passwordConfirm}
+          onChangeText={formik.handleChange('passwordConfirm')}
           onSubmitEditing={formik.handleSubmit}
           autoCorrect={false}
           autoCapitalize='none'

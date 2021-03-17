@@ -12,5 +12,5 @@ export const Container = styled.SafeAreaView`
 export const Content = styled(KeyboardAwareScrollView).attrs({
   showsVerticalScrollIndicator: false,
 })`
-  padding: 10px;
+  padding: 0 10px;
 `;
