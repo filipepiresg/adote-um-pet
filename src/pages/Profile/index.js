@@ -59,11 +59,11 @@ const Profile = () => {
           );
         }
 
-        await analytics().logEvent('error_get_location', { error: status });
+        await analytics().logEvent('error_get_location', { error: JSON.stringify(status) });
 
         return 'Ocorreu um erro ao tentar pegar sua localização';
       } catch (error) {
-        await analytics().logEvent('error_get_location', { error });
+        await analytics().logEvent('error_get_location', { error: JSON.stringify(error) });
         console.log('Error on get geolocation', error);
 
         return 'Ocorreu um erro ao tentar pegar sua localização';
@@ -108,7 +108,9 @@ const Profile = () => {
 
           await firestore().collection('users').doc(user.uid).set(newDocument);
 
-          await analytics().logEvent('update_profile', newDocument);
+          await analytics().logEvent('update_profile', {
+            new_document: JSON.stringify(newDocument),
+          });
 
           formik.setFieldValue('address', formatted_address);
 
@@ -126,7 +128,7 @@ const Profile = () => {
           setLoading(false);
         }
       } catch (error) {
-        await analytics().logEvent('error_register', { error });
+        await analytics().logEvent('error_register', { error: JSON.stringify(error) });
         console.log('Error on update profile', error);
 
         Alert.alert('Ocorreu um problema ao atualizar seu perfil', 'Tente novamente em instantes', [

@@ -74,7 +74,9 @@ const Add = () => {
         };
         await firestore().collection('pets').doc(uid).set(document);
 
-        await analytics().logEvent('create_ad_pet', document);
+        await analytics().logEvent('create_ad_pet', {
+          document: JSON.stringify(document),
+        });
 
         await sendNotification('Um novo pet está disponível para adoção');
 
@@ -84,7 +86,7 @@ const Add = () => {
         console.log('Error on create pet', error);
 
         await analytics().logEvent('error_permission_requested', {
-          error,
+          error: JSON.stringify(error),
         });
       } finally {
         setLoading(false);

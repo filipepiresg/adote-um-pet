@@ -36,14 +36,14 @@ const Map = () => {
             .map((doc) => ({ ...doc.data(), path: `users/${doc.id}.png` }));
 
           analytics().logEvent('get_users', {
-            users: LOCATIONS,
+            users: JSON.stringify(LOCATIONS),
           });
           setLocations(LOCATIONS);
         },
         (error) => {
           console.log('Error on get users', error);
 
-          analytics().logEvent('error_get_users', { error });
+          analytics().logEvent('error_get_users', { error: JSON.stringify(error) });
         }
       );
 
@@ -138,7 +138,7 @@ const Map = () => {
     } catch (err) {
       console.log('Error on request permissions', err);
 
-      analytics().logEvent('error_permission_request_map', { error: err });
+      analytics().logEvent('error_permission_request_map', { error: JSON.stringify(err) });
     }
   }, [handleLocation]);
 
@@ -156,7 +156,7 @@ const Map = () => {
     } catch (err) {
       console.log('Error on check permission', err);
 
-      analytics().logEvent('error_permission_check_map', { error: err });
+      analytics().logEvent('error_permission_check_map', { error: JSON.stringify(err) });
     }
   }, [handleLocation, requestPermissionIOS]);
 
@@ -191,7 +191,7 @@ const Map = () => {
         );
       }
     } catch (err) {
-      await analytics().logEvent('error_permission_request_map', { error: err });
+      await analytics().logEvent('error_permission_request_map', { error: JSON.stringify(err) });
       console.log('Error on request permissions', err);
     }
   }, [handleLocation]);
@@ -210,7 +210,7 @@ const Map = () => {
     } catch (err) {
       console.log('Error on check permission', err);
 
-      await analytics().logEvent('error_permission_check_map', { error: err });
+      await analytics().logEvent('error_permission_check_map', { error: JSON.stringify(err) });
     }
   }, [handleLocation, requestPermissionAndroid]);
 

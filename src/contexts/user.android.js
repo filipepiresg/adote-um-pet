@@ -42,9 +42,9 @@ export const UserProvider = ({ children }) => {
           },
           (error) => {
             analytics().logEvent('error_get_profile', {
-              error,
+              error: JSON.stringify(error),
             });
-            console.log('Error on get profile data', error.message);
+            console.log('Error on get profile data', error.message ?? error);
           }
         );
     } else {
@@ -70,7 +70,7 @@ export const UserProvider = ({ children }) => {
 
           analytics()
             .logEvent('login', {
-              user,
+              user: JSON.stringify(user),
             })
             .finally(() => {
               if (successCallback) successCallback();
@@ -80,7 +80,7 @@ export const UserProvider = ({ children }) => {
           console.log('Error on login', error);
 
           analytics()
-            .logEvent('error_login', { error })
+            .logEvent('error_login', { error: JSON.stringify(error) })
             .finally(() => {
               if (failureCallback) failureCallback();
             });
@@ -103,7 +103,7 @@ export const UserProvider = ({ children }) => {
 
           analytics()
             .logEvent('logout', {
-              user: state.user,
+              user: JSON.stringify(state.user),
             })
             .finally(() => {
               if (successCallback) successCallback();
@@ -113,7 +113,7 @@ export const UserProvider = ({ children }) => {
           console.log('Error on logout', error);
 
           analytics()
-            .logEvent('error_logout', { error })
+            .logEvent('error_logout', { error: JSON.stringify(error) })
             .finally(() => {
               if (failureCallback) failureCallback();
             });
@@ -157,8 +157,8 @@ export const UserProvider = ({ children }) => {
                 });
 
                 analytics()
-                  .logEvent('signup', {
-                    user,
+                  .logEvent('sign_up', {
+                    user: JSON.stringify(user),
                   })
                   .finally(() => {
                     if (successCallback) successCallback();
@@ -173,8 +173,8 @@ export const UserProvider = ({ children }) => {
               });
 
               analytics()
-                .logEvent('signup', {
-                  user,
+                .logEvent('sign_up', {
+                  user: JSON.stringify(user),
                 })
                 .finally(() => {
                   if (successCallback) successCallback();
@@ -186,7 +186,7 @@ export const UserProvider = ({ children }) => {
         console.log('Error on register', error);
 
         analytics()
-          .logEvent('error_register', { error })
+          .logEvent('error_register', { error: JSON.stringify(error) })
           .finally(() => {
             if (failureCallback) failureCallback();
           });

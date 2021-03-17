@@ -45,7 +45,7 @@ const ImagePicker = forwardRef(({ children = null, changePhoto = () => {}, image
       })
       .catch((error) => {
         analytics().logEvent('error_permission_requested', {
-          error,
+          error: JSON.stringify(error),
         });
         console.log('Error on request permission', error);
       });
@@ -78,7 +78,7 @@ const ImagePicker = forwardRef(({ children = null, changePhoto = () => {}, image
           })
           .catch((error) => {
             analytics().logEvent('error_permission_check', {
-              error,
+              error: JSON.stringify(error),
             });
             console.log('Error on check permissions', error);
           });
