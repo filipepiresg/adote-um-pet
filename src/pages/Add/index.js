@@ -10,6 +10,7 @@ import { get } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
 
+import { sendNotification } from '~/src/api/onesignal';
 import { DefaultPetPicture } from '~/src/assets/images';
 import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
 import UserContext from '~/src/contexts/user';
@@ -73,6 +74,8 @@ const Add = () => {
               email: user?.email || 'Sem e-mail',
             },
           });
+
+        await sendNotification('Um novo pet está disponível para adoção');
 
         setPhoto(null);
         resetForm();
