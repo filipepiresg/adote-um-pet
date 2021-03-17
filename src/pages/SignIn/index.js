@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Pressable } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +22,8 @@ const SCHEMA = Yup.object({
 
 const SignIn = () => {
   const navigation = useNavigation();
+
+  const [isShowPassword, setShowPassword] = useState(false);
 
   const { handleLogin } = useContext(UserContext);
 
@@ -80,7 +82,11 @@ const SignIn = () => {
           autoCapitalize='none'
           keyboardType='default'
           returnKeyType='send'
-          secureTextEntry
+          secureTextEntry={!isShowPassword}
+          hasPasswordShow
+          setShowPassword={() => {
+            setShowPassword(!isShowPassword);
+          }}
           onSubmitEditing={formik.submitForm}
         />
         <Button onPress={formik.submitForm} style={Styles.button}>
