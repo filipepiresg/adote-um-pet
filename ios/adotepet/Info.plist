@@ -24,25 +24,6 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-  <key>UIAppFonts</key>
-  <array>
-    <string>AntDesign.ttf</string>
-    <string>Entypo.ttf</string>
-    <string>EvilIcons.ttf</string>
-    <string>Feather.ttf</string>
-    <string>FontAwesome.ttf</string>
-    <string>FontAwesome5_Brands.ttf</string>
-    <string>FontAwesome5_Regular.ttf</string>
-    <string>FontAwesome5_Solid.ttf</string>
-    <string>Foundation.ttf</string>
-    <string>Ionicons.ttf</string>
-    <string>MaterialIcons.ttf</string>
-    <string>MaterialCommunityIcons.ttf</string>
-    <string>SimpleLineIcons.ttf</string>
-    <string>Octicons.ttf</string>
-    <string>Zocial.ttf</string>
-    <string>Fontisto.ttf</string>
-  </array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -54,18 +35,42 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>NSAppleMusicUsageDescription</key>
-  <string>$(PRODUCT_NAME) precisa usar para definir seu gosto musical</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
-  <key>NSCameraUsageDescription</key>
-  <string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>$(PRODUCT_NAME) precisa usar para definir seu gosto musical</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) precisa usar sua localização para determinar organizações próximas</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) precisa usar sua câmera para adicionar sua foto</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
