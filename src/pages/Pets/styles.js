@@ -7,9 +7,14 @@ export const Container = styled.SafeAreaView`
   background-color: ${Colors.BACKGROUND};
 `;
 
-export const Content = styled.FlatList`
+export const Content = styled.FlatList.attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+  },
+})`
   flex: 1;
-  padding: 20px 10px;
 `;
 
 export const Separator = styled.View`
