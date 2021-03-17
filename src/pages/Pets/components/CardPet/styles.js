@@ -113,3 +113,8 @@ export const OrganizationEmail = styled.Text.attrs({
 
   color: ${transparentize(0.4, Colors.BLACK)};
 `;
+
+export const DeleteContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+`;

@@ -67,6 +67,18 @@ const ITEMS_AUTHENTICATED = [
       <Entypo name='home' size={20} style={styles.icon} color={transparentize(0.3, Colors.BLACK)} />
     ),
   },
+  {
+    route: 'Pets',
+    title: 'Meus anúncios',
+    Icon: () => (
+      <MaterialIcons
+        name='pets'
+        size={20}
+        style={styles.icon}
+        color={transparentize(0.3, Colors.BLACK)}
+      />
+    ),
+  },
 ];
 const ITEMS = [
   {

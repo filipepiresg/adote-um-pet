@@ -1,9 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState, memo } from 'react';
 import { Pressable, Linking, Alert, Platform } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import analytics from '@react-native-firebase/analytics';
+import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
 import { get } from 'lodash';
+import PropTypes from 'prop-types';
+
+import { Colors } from '~/src/utils';
 
 import {
   Container,
@@ -22,9 +28,10 @@ import {
   OrganizationEmail,
   LoadingImage,
   Loading,
+  DeleteContainer,
 } from './styles';
 
-const CardPet = ({ data }) => {
+const CardPet = ({ data, isLogged = false }) => {
   const [picture, setPicture] = useState();
 
   useEffect(() => {
@@ -72,6 +79,18 @@ const CardPet = ({ data }) => {
       });
   }, [phoneNumber]);
 
+  const handleDelete = useCallback(async () => {
+    try {
+      if (data?.id)
+        await firestore().collection('pets').doc(data.id).update({
+          deleted_at: new Date(),
+        });
+    } catch (error) {
+      console.log('Error on delete pet', error);
+      await analytics().logEvent('error_delete_ad', { error: JSON.stringify(error) });
+    }
+  }, [data]);
+
   return (
     <>
       <Container>
@@ -96,32 +115,61 @@ const CardPet = ({ data }) => {
           </Row>
           <Description>{data.description}</Description>
         </Content>
+        {isLogged && (
+          <Pressable onPress={handleDelete}>
+            <DeleteContainer>
+              <Ionicons name='close-circle' size={28} color={Colors.TERTIARY} />
+            </DeleteContainer>
+          </Pressable>
+        )}
       </Container>
-      <Pressable
-        onPress={() => {
-          if (String(phoneNumber)) {
-            callPhone();
-          }
-        }}
-      >
-        <Container inverted>
-          <Content>
-            <OrganizationName>
-              {get(data, 'organization.name', 'Sem nome da organização')}
-            </OrganizationName>
-            <OrganizationEmail>
-              {get(data, 'organization.email', 'Sem e-mail da organização')}
-            </OrganizationEmail>
-          </Content>
-          {!!String(phoneNumber) && (
-            <CallContent>
-              <CallPhone>Ligar para a organização</CallPhone>
-            </CallContent>
-          )}
-        </Container>
-      </Pressable>
+      {!isLogged && (
+        <Pressable
+          onPress={() => {
+            if (String(phoneNumber)) {
+              callPhone();
+            }
+          }}
+        >
+          <Container inverted>
+            <Content>
+              <OrganizationName>
+                {get(data, 'organization.name', 'Sem nome da organização')}
+              </OrganizationName>
+              <OrganizationEmail>
+                {get(data, 'organization.email', 'Sem e-mail da organização')}
+              </OrganizationEmail>
+            </Content>
+            {!!String(phoneNumber) && (
+              <CallContent>
+                <CallPhone>Ligar para a organização</CallPhone>
+              </CallContent>
+            )}
+          </Container>
+        </Pressable>
+      )}
     </>
   );
+};
+
+CardPet.propTypes = {
+  data: PropTypes.shape({
+    path: PropTypes.string,
+    organization: PropTypes.shape({
+      phone: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+    }),
+    image_url: PropTypes.string,
+    name: PropTypes.string,
+    age: PropTypes.string,
+    breed: PropTypes.string,
+    type: PropTypes.string,
+  }).isRequired,
+  isLogged: PropTypes.bool,
+};
+CardPet.defaultProps = {
+  isLogged: false,
 };
 
 export default memo(CardPet);
