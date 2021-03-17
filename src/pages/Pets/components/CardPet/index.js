@@ -64,6 +64,11 @@ const CardPet = ({ data }) => {
       })
       .catch((err) => {
         console.log(err);
+
+        Alert.alert(
+          'Ocorreu um erro ao fazer a ligação',
+          'Problema ao tentar ligar para este número'
+        );
       });
   }, [phoneNumber]);
 
