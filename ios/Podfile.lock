@@ -239,6 +239,9 @@ PODS:
     - FirebaseAnalytics (= 7.8.1)
   - Firebase/CoreOnly (7.8.1):
     - FirebaseCore (= 7.8.0)
+  - Firebase/Crashlytics (7.8.1):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 7.8.0)
   - Firebase/Firestore (7.8.1):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 7.8.0)
@@ -268,6 +271,12 @@ PODS:
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/Logger (~> 7.0)
     - nanopb (~> 2.30907.0)
+  - FirebaseCrashlytics (7.8.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleDataTransport (~> 8.0)
+    - nanopb (~> 2.30907.0)
+    - PromisesObjC (~> 1.2)
   - FirebaseFirestore (7.8.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
@@ -727,6 +736,10 @@ PODS:
     - Firebase/Auth (= 7.8.1)
     - React-Core
     - RNFBApp
+  - RNFBCrashlytics (11.1.1):
+    - Firebase/Crashlytics (= 7.8.1)
+    - React-Core
+    - RNFBApp
   - RNFBFirestore (11.1.1):
     - Firebase/Firestore (= 7.8.1)
     - React-Core
@@ -850,6 +863,7 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -871,6 +885,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
     - FirebaseFirestore
     - FirebaseInstallations
     - FirebaseStorage
@@ -992,6 +1007,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNFBCrashlytics:
+    :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBStorage:
@@ -1024,6 +1041,7 @@ SPEC CHECKSUMS:
   FirebaseAuth: 667e576a716f6f9fe31687791406f61135002d47
   FirebaseCore: 049029df3096e5c118917029be7da75ee16f3b1b
   FirebaseCoreDiagnostics: 066f996579cf097bdad3d7dc9a918d6b9e129c50
+  FirebaseCrashlytics: d07e61d85aabc7d38a68f94ff99995f8557ea8d0
   FirebaseFirestore: f1ededef972dea136e88a7bae9732f52afe64221
   FirebaseInstallations: 7f7ed0e7e27fb51f57291e1876e2ddb1524126c1
   FirebaseStorage: 84d1eb7bfe8c3cbfe6beeeb02ce712f65dcb8b83
@@ -1092,6 +1110,7 @@ SPEC CHECKSUMS:
   RNFBAnalytics: 1d148d71352fff61c03fae581c76b42ba122054b
   RNFBApp: 27bb6551d41886fb7352c66174defc26d2c298b4
   RNFBAuth: 76096a8d7fcc09d1bb9def59534d584037d825e9
+  RNFBCrashlytics: 40b0d09b49b57fe8c0b3a2b5070ecce36192e630
   RNFBFirestore: f7e6b28bd9fe079f9bf153e8a2eac7e9a9367c80
   RNFBStorage: 9b274982a3558e3dc99a1e9e63be97e5014dc9d8
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
