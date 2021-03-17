@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
-import Geolocation from '@react-native-community/geolocation';
 import analytics from '@react-native-firebase/analytics';
 import firestore from '@react-native-firebase/firestore';
 
@@ -86,19 +86,31 @@ const Map = () => {
             }
           )
           .catch((err) => {
+            console.log('Error on get location', err);
+
+            analytics().logEvent('error_get_location', { error: JSON.stringify(err) });
+
             setShowMap({
               loading: false,
               error: err,
             });
           });
       },
-      ({ message }) => {
+      (error) => {
+        console.log('Error on get position', error);
+
+        analytics().logEvent('error_get_position', { error: JSON.stringify(error) });
+
         setShowMap({
           loading: false,
-          error: message,
+          error: error.message,
         });
       },
       {
+        accuracy: {
+          android: 'balanced',
+          ios: 'best',
+        },
         enableHighAccuracy: true,
         timeout: 20 * 1000,
       }
@@ -162,9 +174,15 @@ const Map = () => {
 
   const requestPermissionAndroid = useCallback(async () => {
     try {
-      const statuses = await requestMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
+      const statuses = await requestMultiple([
+        PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      ]);
 
-      if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED) {
+      if (
+        statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED &&
+        statuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION] === RESULTS.GRANTED
+      ) {
         await analytics().logEvent('request_permission_map_done');
 
         handleLocation();
@@ -192,15 +210,22 @@ const Map = () => {
       }
     } catch (err) {
       await analytics().logEvent('error_permission_request_map', { error: JSON.stringify(err) });
+
       console.log('Error on request permissions', err);
     }
   }, [handleLocation]);
 
   const checkPermissionAndroid = useCallback(async () => {
     try {
-      const statuses = await checkMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
+      const statuses = await checkMultiple([
+        PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      ]);
 
-      if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED) {
+      if (
+        statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED &&
+        statuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION] === RESULTS.GRANTED
+      ) {
         await analytics().logEvent('check_permission_done_map');
 
         handleLocation();
