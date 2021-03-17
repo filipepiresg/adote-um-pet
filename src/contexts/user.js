@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 const INITIAL_STATE = {
   loading: false,
@@ -95,6 +96,16 @@ export const UserProvider = ({ children }) => {
     auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(({ user }) => {
+        let picture = null;
+        let task = null;
+
+        if (payload?.picture?.uri) {
+          const reference = storage().ref(`users/${user.uid}.png`);
+
+          task = reference.putFile(payload.picture.uri, { cacheControl: 'no-store' });
+          picture = reference.toString();
+        }
+
         firestore()
           .collection('users')
           .doc(user.uid)
@@ -103,16 +114,30 @@ export const UserProvider = ({ children }) => {
             description: payload.description,
             name: payload.name,
             phone: payload.phone,
+            picture,
           })
           .then(() => {
-            setState({
-              isAuthenticated: true,
-              loading: false,
-              profile: null,
-              user,
-            });
+            if (task) {
+              task.then(() => {
+                setState({
+                  isAuthenticated: true,
+                  loading: false,
+                  profile: null,
+                  user,
+                });
 
-            if (successCallback) successCallback();
+                if (successCallback) successCallback();
+              });
+            } else {
+              setState({
+                isAuthenticated: true,
+                loading: false,
+                profile: null,
+                user,
+              });
+
+              if (successCallback) successCallback();
+            }
           });
       })
       .catch((error) => {

@@ -5,6 +5,7 @@ import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 import { useFormik } from 'formik';
 import { get } from 'lodash';
@@ -67,18 +68,28 @@ const Profile = () => {
 
   const handleSubmit = useCallback(
     async ({ name, phone, description, address }) => {
-      const { results, status } = await Geocoder.from(address);
+      try {
+        const { results, status } = await Geocoder.from(address);
 
-      if (status === 'OK') {
-        const [
-          {
-            formatted_address,
-            geometry: { location },
-          },
-        ] = results.filter(({ types }) => types.includes('street_address'));
+        if (status === 'OK') {
+          const [
+            {
+              formatted_address,
+              geometry: { location },
+            },
+          ] = results.filter(({ types }) => types.includes('street_address'));
 
-        if (user?.uid)
-          firestore()
+          if (!user?.uid) {
+            throw new Error('User not found');
+          }
+
+          if (Object.keys(photo).length > 1) {
+            await storage().ref(`users/${user.uid}.png`).putFile(photo.uri, {
+              cacheControl: 'no-store',
+            });
+          }
+
+          await firestore()
             .collection('users')
             .doc(user.uid)
             .set({
@@ -89,42 +100,37 @@ const Profile = () => {
                 latitude: location.lat,
                 longitude: location.lng,
               },
-            })
-            .then(() => {
-              formik.setFieldValue('address', formatted_address);
-
-              Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    setIsEditable(false);
-
-                    setLoading(false);
-                  },
-                },
-              ]);
-            })
-            .catch((error) => {
-              console.log('Error on update profile', error);
-
-              Alert.alert(
-                'Ocorreu um problema ao atualizar seu perfil',
-                'Tente novamente em instantes',
-                [
-                  {
-                    text: 'OK',
-                    onPress: () => {
-                      setLoading(false);
-                    },
-                  },
-                ]
-              );
             });
-      } else {
-        setLoading(false);
+
+          formik.setFieldValue('address', formatted_address);
+
+          Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
+            {
+              text: 'OK',
+              onPress: () => {
+                setIsEditable(false);
+
+                setLoading(false);
+              },
+            },
+          ]);
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log('Error on update profile', error);
+
+        Alert.alert('Ocorreu um problema ao atualizar seu perfil', 'Tente novamente em instantes', [
+          {
+            text: 'OK',
+            onPress: () => {
+              setLoading(false);
+            },
+          },
+        ]);
       }
     },
-    [formik, user]
+    [formik, user, photo]
   );
 
   const formik = useFormik({

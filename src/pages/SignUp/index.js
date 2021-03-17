@@ -67,6 +67,7 @@ const SignUp = () => {
                 latitude: location.lat,
                 longitude: location.lng,
               },
+              picture: photo,
               ...values,
             },
             () => {
@@ -101,7 +102,7 @@ const SignUp = () => {
         }
       });
     },
-    [handleRegister, navigation]
+    [handleRegister, navigation, photo]
   );
 
   const formik = useFormik({
