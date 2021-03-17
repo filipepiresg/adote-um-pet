@@ -2,6 +2,7 @@ import 'react-native-get-random-values';
 import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Pressable } from 'react-native';
 
+import analytics from '@react-native-firebase/analytics';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
@@ -61,19 +62,19 @@ const Add = () => {
           picture = reference.toString();
         }
 
-        await firestore()
-          .collection('pets')
-          .doc(uid)
-          .set({
-            ...values,
-            description: get(values, 'description', 'Não possui descrição'),
-            picture,
-            organization: {
-              name: profile?.name || 'Sem nome',
-              phone: profile?.phone || 'Sem telefone',
-              email: user?.email || 'Sem e-mail',
-            },
-          });
+        const document = {
+          ...values,
+          description: get(values, 'description', 'Não possui descrição'),
+          picture,
+          organization: {
+            name: profile?.name || 'Sem nome',
+            phone: profile?.phone || 'Sem telefone',
+            email: user?.email || 'Sem e-mail',
+          },
+        };
+        await firestore().collection('pets').doc(uid).set(document);
+
+        await analytics().logEvent('create_ad_pet', document);
 
         await sendNotification('Um novo pet está disponível para adoção');
 
@@ -81,6 +82,10 @@ const Add = () => {
         resetForm();
       } catch (error) {
         console.log('Error on create pet', error);
+
+        await analytics().logEvent('error_permission_requested', {
+          error,
+        });
       } finally {
         setLoading(false);
       }

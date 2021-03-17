@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import OneSignal from 'react-native-onesignal';
 
+import analytics from '@react-native-firebase/analytics';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -40,6 +41,9 @@ export const UserProvider = ({ children }) => {
             setState({ ...state, profile: profile ?? null });
           },
           (error) => {
+            analytics().logEvent('error_get_profile', {
+              error,
+            });
             console.log('Error on get profile data', error.message);
           }
         );
@@ -64,36 +68,59 @@ export const UserProvider = ({ children }) => {
             user,
           });
 
-          if (successCallback) successCallback();
+          analytics()
+            .logEvent('login', {
+              user,
+            })
+            .finally(() => {
+              if (successCallback) successCallback();
+            });
         })
         .catch((error) => {
           console.log('Error on login', error);
 
-          if (failureCallback) failureCallback();
+          analytics()
+            .logEvent('error_login', { error })
+            .finally(() => {
+              if (failureCallback) failureCallback();
+            });
         });
     },
     []
   );
 
-  const handleLogout = useCallback((successCallback = null, failureCallback = null) => {
-    auth()
-      .signOut()
-      .then(() => {
-        setState({
-          isAuthenticated: false,
-          loading: false,
-          profile: null,
-          user: null,
+  const handleLogout = useCallback(
+    (successCallback = null, failureCallback = null) => {
+      auth()
+        .signOut()
+        .then(() => {
+          setState({
+            isAuthenticated: false,
+            loading: false,
+            profile: null,
+            user: null,
+          });
+
+          analytics()
+            .logEvent('logout', {
+              user: state.user,
+            })
+            .finally(() => {
+              if (successCallback) successCallback();
+            });
+        })
+        .catch((error) => {
+          console.log('Error on logout', error);
+
+          analytics()
+            .logEvent('error_logout', { error })
+            .finally(() => {
+              if (failureCallback) failureCallback();
+            });
         });
-
-        if (successCallback) successCallback();
-      })
-      .catch((error) => {
-        console.log('Error on logout', error);
-
-        if (failureCallback) failureCallback();
-      });
-  }, []);
+    },
+    [state.user]
+  );
 
   const handleRegister = useCallback((payload, successCallback = null, failureCallback = null) => {
     auth()
@@ -129,7 +156,13 @@ export const UserProvider = ({ children }) => {
                   user,
                 });
 
-                if (successCallback) successCallback();
+                analytics()
+                  .logEvent('signup', {
+                    user,
+                  })
+                  .finally(() => {
+                    if (successCallback) successCallback();
+                  });
               });
             } else {
               setState({
@@ -139,14 +172,24 @@ export const UserProvider = ({ children }) => {
                 user,
               });
 
-              if (successCallback) successCallback();
+              analytics()
+                .logEvent('signup', {
+                  user,
+                })
+                .finally(() => {
+                  if (successCallback) successCallback();
+                });
             }
           });
       })
       .catch((error) => {
         console.log('Error on register', error);
 
-        if (failureCallback) failureCallback();
+        analytics()
+          .logEvent('error_register', { error })
+          .finally(() => {
+            if (failureCallback) failureCallback();
+          });
       });
   }, []);
 

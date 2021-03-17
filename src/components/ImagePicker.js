@@ -4,6 +4,8 @@ import ActionSheet from 'react-native-actionsheet';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
+import analytics from '@react-native-firebase/analytics';
+
 import PropTypes from 'prop-types';
 
 const OPTIONS_PICKER = {
@@ -42,6 +44,9 @@ const ImagePicker = forwardRef(({ children = null, changePhoto = () => {}, image
         }
       })
       .catch((error) => {
+        analytics().logEvent('error_permission_requested', {
+          error,
+        });
         console.log('Error on request permission', error);
       });
   }, []);
@@ -72,6 +77,9 @@ const ImagePicker = forwardRef(({ children = null, changePhoto = () => {}, image
             }
           })
           .catch((error) => {
+            analytics().logEvent('error_permission_check', {
+              error,
+            });
             console.log('Error on check permissions', error);
           });
     },

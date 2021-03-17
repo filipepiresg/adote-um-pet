@@ -5,6 +5,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { checkMultiple, requestMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import Geolocation from '@react-native-community/geolocation';
+import analytics from '@react-native-firebase/analytics';
 import firestore from '@react-native-firebase/firestore';
 
 import { Colors, Metrics } from '~/src/utils';
@@ -34,10 +35,15 @@ const Map = () => {
             .filter((doc) => doc.exists)
             .map((doc) => ({ ...doc.data(), path: `users/${doc.id}.png` }));
 
+          analytics().logEvent('get_users', {
+            users: LOCATIONS,
+          });
           setLocations(LOCATIONS);
         },
         (error) => {
           console.log('Error on get users', error);
+
+          analytics().logEvent('error_get_users', { error });
         }
       );
 
@@ -104,6 +110,8 @@ const Map = () => {
       const statuses = await requestMultiple([PERMISSIONS.IOS.LOCATION_ALWAYS]);
 
       if (statuses[PERMISSIONS.IOS.LOCATION_ALWAYS] === RESULTS.GRANTED) {
+        await analytics().logEvent('request_permission_map_done');
+
         handleLocation();
       } else {
         Alert.alert(
@@ -129,6 +137,8 @@ const Map = () => {
       }
     } catch (err) {
       console.log('Error on request permissions', err);
+
+      analytics().logEvent('error_permission_request_map', { error: err });
     }
   }, [handleLocation]);
 
@@ -137,13 +147,16 @@ const Map = () => {
       const statuses = await checkMultiple([PERMISSIONS.IOS.LOCATION_WHEN_IN_USE]);
 
       if (statuses[PERMISSIONS.IOS.LOCATION_WHEN_IN_USE] === RESULTS.GRANTED) {
+        await analytics().logEvent('check_permission_done_map');
+
         handleLocation();
       } else {
         requestPermissionIOS();
       }
     } catch (err) {
       console.log('Error on check permission', err);
-      // return RESULTS.UNAVAILABLE;
+
+      analytics().logEvent('error_permission_check_map', { error: err });
     }
   }, [handleLocation, requestPermissionIOS]);
 
@@ -152,6 +165,8 @@ const Map = () => {
       const statuses = await requestMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
 
       if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED) {
+        await analytics().logEvent('request_permission_map_done');
+
         handleLocation();
       } else {
         Alert.alert(
@@ -176,6 +191,7 @@ const Map = () => {
         );
       }
     } catch (err) {
+      await analytics().logEvent('error_permission_request_map', { error: err });
       console.log('Error on request permissions', err);
     }
   }, [handleLocation]);
@@ -185,12 +201,16 @@ const Map = () => {
       const statuses = await checkMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
 
       if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED) {
+        await analytics().logEvent('check_permission_done_map');
+
         handleLocation();
       } else {
         requestPermissionAndroid();
       }
     } catch (err) {
       console.log('Error on check permission', err);
+
+      await analytics().logEvent('error_permission_check_map', { error: err });
     }
   }, [handleLocation, requestPermissionAndroid]);
 

@@ -4,6 +4,7 @@ import { Alert, Pressable } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
+import analytics from '@react-native-firebase/analytics';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
@@ -50,13 +51,19 @@ const Profile = () => {
         const { results, status } = await Geocoder.from(latitude, longitude);
 
         if (status === 'OK') {
+          await analytics().logEvent('get_location');
+
           return (
             results.filter(({ types }) => types.includes('street_address'))[0]?.formatted_address ||
             'Localização errada'
           );
         }
+
+        await analytics().logEvent('error_get_location', { error: status });
+
         return 'Ocorreu um erro ao tentar pegar sua localização';
       } catch (error) {
+        await analytics().logEvent('error_get_location', { error });
         console.log('Error on get geolocation', error);
 
         return 'Ocorreu um erro ao tentar pegar sua localização';
@@ -89,18 +96,19 @@ const Profile = () => {
             });
           }
 
-          await firestore()
-            .collection('users')
-            .doc(user.uid)
-            .set({
-              name,
-              phone,
-              description,
-              coordinate: {
-                latitude: location.lat,
-                longitude: location.lng,
-              },
-            });
+          const newDocument = {
+            name,
+            phone,
+            description,
+            coordinate: {
+              latitude: location.lat,
+              longitude: location.lng,
+            },
+          };
+
+          await firestore().collection('users').doc(user.uid).set(newDocument);
+
+          await analytics().logEvent('update_profile', newDocument);
 
           formik.setFieldValue('address', formatted_address);
 
@@ -118,6 +126,7 @@ const Profile = () => {
           setLoading(false);
         }
       } catch (error) {
+        await analytics().logEvent('error_register', { error });
         console.log('Error on update profile', error);
 
         Alert.alert('Ocorreu um problema ao atualizar seu perfil', 'Tente novamente em instantes', [
