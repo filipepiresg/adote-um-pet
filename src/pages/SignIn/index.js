@@ -84,7 +84,7 @@ const SignIn = () => {
           returnKeyType='send'
           secureTextEntry={!isShowPassword}
           hasPasswordShow
-          setShowPassword={() => {
+          changeVibility={() => {
             setShowPassword(!isShowPassword);
           }}
           onSubmitEditing={formik.submitForm}
