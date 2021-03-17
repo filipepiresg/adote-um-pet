@@ -4572,7 +4572,7 @@ interpret@^1.0.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
 
-invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -7448,6 +7448,13 @@ react-native-masked-text@^1.13.0:
   dependencies:
     date-and-time "0.9.0"
     tinymask "1.0.2"
+
+react-native-onesignal@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.0.5.tgz#d3a3b23b401e8e1f065d9af0941f6f26f21018e5"
+  integrity sha512-clDuRYKuyiMRBizgCN9EqyLWpZhVJPgcl9o7SCRUokot1Cg3Lsh1IMdpzqKh4HfPKaoj3sYC0XQtWAn9OhBw3w==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-permissions@^3.0.1:
   version "3.0.1"

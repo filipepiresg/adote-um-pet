@@ -30,6 +30,7 @@ Foi utilizado o `eslint + prettier` com as regras [aqui](./.eslintrc.js)
   - **[iOS]** Infelizmente, não será disponibilizado o `.ipa`, pois é necessário uma licença para isso.
 - Em desenvolvimento
   1. Necessário primeiramente clonar este repositório, depois instalar as dependência com o comando `npm i` (ou `yarn install`)
-  2. Rodar o comando `npm start` (ou `yarn start`)
+  2. Copiar o arquivo `.env.example` para `.env` e colocar suas chaves de acesso a _api google maps_ e ao projeto no _onesignal_
+  3. Rodar o comando `npm start` (ou `yarn start`)
      1. **Para android**, deve-se abrir o emulador (ou estar conectado com o celular ao computador), e rodar o comando `npm run dev:android` (ou `yarn run dev:android`).
      2. **Para ios**, deve-se ter instalado o `XCode` (em uma máquina com SO `OSX`), e em seguida rodar o comando `npm run dev:ios` (ou `yarn run dev:ios`). _**OBS.:**_ **Não é possível enviar notificação para simuladores, veja mais [aqui](https://documentation.onesignal.com/docs/troubleshooting-ios#3-test-on-mobile-device).**
