@@ -1,10 +1,13 @@
+import 'react-native-get-random-values';
 import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Pressable } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 import { useFormik } from 'formik';
 import { get } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
 
 import { DefaultPetPicture } from '~/src/assets/images';
@@ -43,31 +46,43 @@ const Add = () => {
   const photoRef = useRef();
 
   const handleSubmit = useCallback(
-    (values, { resetForm }) => {
-      setLoading(true);
+    async (values, { resetForm }) => {
+      try {
+        setLoading(true);
 
-      firestore()
-        .collection('pets')
-        .add({
-          ...values,
-          description: get(values, 'description', 'Não possui descrição'),
-          organization: {
-            name: profile?.name || 'Sem nome',
-            phone: profile?.phone || 'Sem telefone',
-            email: user?.email || 'Sem e-mail',
-          },
-        })
-        .then(() => {
-          resetForm();
-        })
-        .catch((error) => {
-          console.log('Error on create pet', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        const uid = uuidv4();
+        let picture = null;
+
+        if (photo?.uri) {
+          const reference = storage().ref(`pets/${uid}.png`);
+
+          await reference.putFile(photo.uri, { cacheControl: 'no-store' });
+          picture = reference.toString();
+        }
+
+        await firestore()
+          .collection('pets')
+          .doc(uid)
+          .set({
+            ...values,
+            description: get(values, 'description', 'Não possui descrição'),
+            picture,
+            organization: {
+              name: profile?.name || 'Sem nome',
+              phone: profile?.phone || 'Sem telefone',
+              email: user?.email || 'Sem e-mail',
+            },
+          });
+
+        setPhoto(null);
+        resetForm();
+      } catch (error) {
+        console.log('Error on create pet', error);
+      } finally {
+        setLoading(false);
+      }
     },
-    [profile, user]
+    [profile, user, photo]
   );
 
   const formik = useFormik({

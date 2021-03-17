@@ -1,5 +1,7 @@
-import React, { useCallback, useMemo, memo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, memo } from 'react';
 import { Pressable, Linking, Alert, Platform } from 'react-native';
+
+import storage from '@react-native-firebase/storage';
 
 import { get } from 'lodash';
 
@@ -18,10 +20,27 @@ import {
   CallContent,
   OrganizationName,
   OrganizationEmail,
+  LoadingImage,
+  Loading,
 } from './styles';
 
 const CardPet = ({ data }) => {
-  const phoneNumber = useMemo(() => get(data, 'organization,phone', '').replace(/\W/g, ''), [data]);
+  const [picture, setPicture] = useState();
+
+  useEffect(() => {
+    storage()
+      .ref(data.path)
+      .getDownloadURL()
+      .then((url) => {
+        setPicture(url);
+      })
+      .catch((error) => {
+        setPicture(null);
+        console.log('Error on get pet image', error);
+      });
+  }, [data.path]);
+
+  const phoneNumber = useMemo(() => get(data, 'organization.phone', '').replace(/\W/g, ''), [data]);
 
   const callPhone = useCallback(() => {
     let _phoneNumber = phoneNumber;
@@ -51,7 +70,13 @@ const CardPet = ({ data }) => {
   return (
     <>
       <Container>
-        <Image source={{ uri: data.image_url }} />
+        <LoadingImage>
+          {picture === undefined ? (
+            <Loading />
+          ) : (
+            <Image source={{ uri: picture ?? data.image_url }} />
+          )}
+        </LoadingImage>
         <Content hasLeftMargin>
           <Name>{data.name}</Name>
           <Age>{data.age} anos</Age>

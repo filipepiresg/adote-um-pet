@@ -15,7 +15,9 @@ const Pets = () => {
       .collection('pets')
       .onSnapshot(
         (snapshot) => {
-          const PETS = snapshot.docs.filter((doc) => doc.exists).map((doc) => doc.data());
+          const PETS = snapshot.docs
+            .filter((doc) => doc.exists)
+            .map((doc) => ({ ...doc.data(), path: `pets/${doc.id}.png` }));
 
           setPets(PETS);
         },

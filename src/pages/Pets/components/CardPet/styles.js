@@ -17,13 +17,27 @@ export const Container = styled.View`
   border-color: ${Colors.BUTTON};
 `;
 
+export const LoadingImage = styled.View`
+  align-items: center;
+  justify-content: center;
+  width: ${Metrics.screenWidth * 0.2}px;
+  height: ${Metrics.screenWidth * 0.2}px;
+  border-radius: ${Metrics.screenWidth * 0.1}px;
+  margin-right: 10px;
+  background-color: ${transparentize(0.5, Colors.BLACK)};
+`;
+
+export const Loading = styled.ActivityIndicator.attrs({
+  size: 'small',
+  color: 'white',
+})``;
+
 export const Image = styled.Image.attrs({
   resizeMode: 'cover',
 })`
   width: ${Metrics.screenWidth * 0.2}px;
   height: ${Metrics.screenWidth * 0.2}px;
   border-radius: ${Metrics.screenWidth * 0.1}px;
-  margin-right: 10px;
 `;
 
 export const Content = styled.View`
