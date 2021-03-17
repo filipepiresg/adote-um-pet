@@ -267,6 +267,7 @@ const Map = () => {
           loadingBackgroundColor={Colors.BACKGROUND}
           loadingEnabled
           loadingIndicatorColor={Colors.BLACK}
+          showsUserLocation
         >
           {locations.map((mark, index) => (
             <CustomMarker mark={mark} key={String(index)} />
