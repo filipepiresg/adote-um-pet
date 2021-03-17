@@ -30,7 +30,9 @@ const Map = () => {
       .collection('users')
       .onSnapshot(
         ({ docs = [] }) => {
-          const LOCATIONS = docs.filter((doc) => doc.exists).map((doc) => doc.data());
+          const LOCATIONS = docs
+            .filter((doc) => doc.exists)
+            .map((doc) => ({ ...doc.data(), path: `users/${doc.id}.png` }));
 
           setLocations(LOCATIONS);
         },
