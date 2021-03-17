@@ -427,7 +427,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97827DDEF91F96E639D22F1 /* Pods-adotepet.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = adotepet/adotepet.entitlements;
@@ -457,7 +457,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A3211DCD24921AC309163EB2 /* Pods-adotepet.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = adotepet/adotepet.entitlements;
