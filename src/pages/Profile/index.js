@@ -77,9 +77,9 @@ const Profile = () => {
   const handleSubmit = useCallback(
     async ({ name, phone, description, address }) => {
       try {
-        const { results, status } = await Geocoder.from(address);
-
         showLoading();
+
+        const { results, status } = await Geocoder.from(address);
 
         if (status === 'OK') {
           const [
@@ -93,7 +93,7 @@ const Profile = () => {
             throw new Error('User not found');
           }
 
-          if (Object.keys(photo).length > 1) {
+          if (photo && Object.keys(photo).length > 1) {
             await storage().ref(`users/${user.uid}.png`).putFile(photo.uri, {
               cacheControl: 'no-store',
             });
@@ -173,8 +173,6 @@ const Profile = () => {
   }, [profile]);
 
   useEffect(() => {
-    showLoading();
-
     async function getAddress() {
       const _address = await handleGeolocation(
         profile?.coordinate?.latitude,

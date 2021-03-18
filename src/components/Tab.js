@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -6,6 +6,7 @@ import { get } from 'lodash';
 import { lighten, transparentize } from 'polished';
 import styled from 'styled-components/native';
 
+import AppContext from '../contexts/app';
 import { Colors } from '../utils';
 
 const Container = styled.SafeAreaView`
@@ -68,13 +69,17 @@ const BUTTONS = [
 ];
 
 const CustomTab = ({ state, navigation }) => {
+  const { showLoading } = useContext(AppContext);
   const routeNames = useMemo(() => get(state, 'routeNames', []), [state]);
 
   const handlePress = useCallback(
     (index, params = {}) => {
+      if (routeNames[index] === 'Profile') {
+        showLoading();
+      }
       navigation.jumpTo(routeNames[index], params);
     },
-    [navigation, routeNames]
+    [navigation, routeNames, showLoading]
   );
 
   return (
