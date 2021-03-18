@@ -4,6 +4,9 @@ import OneSignal from 'react-native-onesignal';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-root-toast';
 
+import { AppProvider } from '~/src/contexts/app';
+import { UserProvider } from '~/src/contexts/user';
+
 import Application from './index';
 
 export default function App() {
@@ -32,7 +35,11 @@ export default function App() {
 
   return (
     <RootSiblingParent>
-      <Application />
+      <AppProvider>
+        <UserProvider>
+          <Application />
+        </UserProvider>
+      </AppProvider>
     </RootSiblingParent>
   );
 }

@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 
 import { LogoColored } from '~/src/assets/icons';
 import { Button, Input } from '~/src/components';
+import AppContext from '~/src/contexts/app';
 import UserContext from '~/src/contexts/user';
 
 import Styles, { Container, Content, Message } from './styles';
@@ -25,6 +26,7 @@ const SignIn = () => {
 
   const [isShowPassword, setShowPassword] = useState(false);
 
+  const { showLoading } = useContext(AppContext);
   const { handleLogin } = useContext(UserContext);
 
   const emailRef = useRef();
@@ -32,13 +34,15 @@ const SignIn = () => {
 
   const handleSubmit = useCallback(
     ({ email, password }) => {
+      showLoading();
+
       handleLogin({ email, password }, () => {
         navigation.reset({
           routes: [{ name: 'App' }],
         });
       });
     },
-    [handleLogin, navigation]
+    [handleLogin, navigation, showLoading]
   );
 
   const formik = useFormik({

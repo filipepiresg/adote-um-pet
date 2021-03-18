@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 
 import { DefaultProfilePicture } from '~/src/assets/images';
 import { Button, Input, ImagePicker, Picture } from '~/src/components';
+import AppContext from '~/src/contexts/app';
 import UserContext from '~/src/contexts/user';
 
 import { Container, Content } from './styles';
@@ -43,6 +44,7 @@ const CELPHONE_OPTIONS = {
 const SignUp = () => {
   const navigation = useNavigation();
   const { handleRegister } = useContext(UserContext);
+  const { showLoading, hideLoading } = useContext(AppContext);
 
   const [photo, setPhoto] = useState(null);
 
@@ -58,6 +60,8 @@ const SignUp = () => {
   const handleSubmit = useCallback(
     (values) => {
       Geocoder.from(values.address).then(({ results, status }) => {
+        showLoading();
+
         if (status === 'OK') {
           const [
             {
@@ -95,18 +99,22 @@ const SignUp = () => {
             }
           );
         } else {
-          Alert.alert('Aconteceu um problema', 'Não foi possível encontrar sua localização', [
-            {
-              text: 'OK',
-              onPress: () => {
-                addressRef.current?.focus();
+          hideLoading();
+
+          setTimeout(() => {
+            Alert.alert('Aconteceu um problema', 'Não foi possível encontrar sua localização', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  addressRef.current?.focus();
+                },
               },
-            },
-          ]);
+            ]);
+          }, 100);
         }
       });
     },
-    [handleRegister, navigation, photo]
+    [handleRegister, hideLoading, navigation, photo, showLoading]
   );
 
   const formik = useFormik({

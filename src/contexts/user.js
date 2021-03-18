@@ -1,9 +1,11 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import analytics from '@react-native-firebase/analytics';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+
+import AppContext from './app';
 
 const INITIAL_STATE = {
   loading: false,
@@ -19,6 +21,8 @@ const UserContext = createContext({
 });
 
 export const UserProvider = ({ children }) => {
+  const { hideLoading } = useContext(AppContext);
+
   const [state, setState] = useState({
     ...INITIAL_STATE,
     isAuthenticated: !!auth().currentUser,
@@ -70,7 +74,11 @@ export const UserProvider = ({ children }) => {
               user: JSON.stringify(user),
             })
             .finally(() => {
-              if (successCallback) successCallback();
+              hideLoading();
+
+              setTimeout(() => {
+                if (successCallback) successCallback();
+              }, 100);
             });
         })
         .catch((error) => {
@@ -79,11 +87,15 @@ export const UserProvider = ({ children }) => {
           analytics()
             .logEvent('error_login', { error: JSON.stringify(error) })
             .finally(() => {
-              if (failureCallback) failureCallback();
+              hideLoading();
+
+              setTimeout(() => {
+                if (failureCallback) failureCallback();
+              }, 100);
             });
         });
     },
-    []
+    [hideLoading]
   );
 
   const handleLogout = useCallback(
@@ -91,20 +103,22 @@ export const UserProvider = ({ children }) => {
       auth()
         .signOut()
         .then(() => {
+          analytics()
+            .logEvent('logout')
+            .finally(() => {
+              hideLoading();
+
+              setTimeout(() => {
+                if (successCallback) successCallback();
+              }, 100);
+            });
+
           setState({
             isAuthenticated: false,
             loading: false,
             profile: null,
             user: null,
           });
-
-          analytics()
-            .logEvent('logout', {
-              user: JSON.stringify(state.user),
-            })
-            .finally(() => {
-              if (successCallback) successCallback();
-            });
         })
         .catch((error) => {
           console.log('Error on logout', error);
@@ -112,40 +126,65 @@ export const UserProvider = ({ children }) => {
           analytics()
             .logEvent('error_logout', { error: JSON.stringify(error) })
             .finally(() => {
-              if (failureCallback) failureCallback();
+              hideLoading();
+
+              setTimeout(() => {
+                if (failureCallback) failureCallback();
+              }, 100);
             });
         });
     },
-    [state.user]
+    [hideLoading]
   );
 
-  const handleRegister = useCallback((payload, successCallback = null, failureCallback = null) => {
-    auth()
-      .createUserWithEmailAndPassword(payload.email, payload.password)
-      .then(({ user }) => {
-        let picture = null;
-        let task = null;
+  const handleRegister = useCallback(
+    (payload, successCallback = null, failureCallback = null) => {
+      auth()
+        .createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(({ user }) => {
+          let picture = null;
+          let task = null;
 
-        if (payload?.picture?.uri) {
-          const reference = storage().ref(`users/${user.uid}.png`);
+          if (payload?.picture?.uri) {
+            const reference = storage().ref(`users/${user.uid}.png`);
 
-          task = reference.putFile(payload.picture.uri, { cacheControl: 'no-store' });
-          picture = reference.toString();
-        }
+            task = reference.putFile(payload.picture.uri, { cacheControl: 'no-store' });
+            picture = reference.toString();
+          }
 
-        firestore()
-          .collection('users')
-          .doc(user.uid)
-          .set({
-            coordinate: payload.coordinate,
-            description: payload.description,
-            name: payload.name,
-            phone: payload.phone,
-            picture,
-          })
-          .then(() => {
-            if (task) {
-              task.then(() => {
+          firestore()
+            .collection('users')
+            .doc(user.uid)
+            .set({
+              coordinate: payload.coordinate,
+              description: payload.description,
+              name: payload.name,
+              phone: payload.phone,
+              picture,
+            })
+            .then(() => {
+              if (task) {
+                task.then(() => {
+                  setState({
+                    isAuthenticated: true,
+                    loading: false,
+                    profile: null,
+                    user,
+                  });
+
+                  analytics()
+                    .logEvent('sign_up', {
+                      user: JSON.stringify(user),
+                    })
+                    .finally(() => {
+                      hideLoading();
+
+                      setTimeout(() => {
+                        if (successCallback) successCallback();
+                      }, 100);
+                    });
+                });
+              } else {
                 setState({
                   isAuthenticated: true,
                   loading: false,
@@ -158,37 +197,31 @@ export const UserProvider = ({ children }) => {
                     user: JSON.stringify(user),
                   })
                   .finally(() => {
-                    if (successCallback) successCallback();
+                    hideLoading();
+
+                    setTimeout(() => {
+                      if (successCallback) successCallback();
+                    }, 100);
                   });
-              });
-            } else {
-              setState({
-                isAuthenticated: true,
-                loading: false,
-                profile: null,
-                user,
-              });
+              }
+            });
+        })
+        .catch((error) => {
+          console.log('Error on register', error);
 
-              analytics()
-                .logEvent('sign_up', {
-                  user: JSON.stringify(user),
-                })
-                .finally(() => {
-                  if (successCallback) successCallback();
-                });
-            }
-          });
-      })
-      .catch((error) => {
-        console.log('Error on register', error);
+          analytics()
+            .logEvent('error_register', { error: JSON.stringify(error) })
+            .finally(() => {
+              hideLoading();
 
-        analytics()
-          .logEvent('error_register', { error: JSON.stringify(error) })
-          .finally(() => {
-            if (failureCallback) failureCallback();
-          });
-      });
-  }, []);
+              setTimeout(() => {
+                if (failureCallback) failureCallback();
+              }, 100);
+            });
+        });
+    },
+    [hideLoading]
+  );
 
   return (
     <UserContext.Provider

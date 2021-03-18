@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import { sendNotification } from '~/src/api/onesignal';
 import { DefaultPetPicture } from '~/src/assets/images';
 import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
+import AppContext from '~/src/contexts/app';
 import UserContext from '~/src/contexts/user';
 
 import Styles, { Container } from './styles';
@@ -33,11 +34,11 @@ const SCHEMA = Yup.object({
 });
 
 const Add = () => {
+  const { loading, showLoading, hideLoading } = useContext(AppContext);
   const {
     state: { profile, user },
   } = useContext(UserContext);
 
-  const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState(null);
 
   const nameRef = useRef();
@@ -50,7 +51,7 @@ const Add = () => {
   const handleSubmit = useCallback(
     async (values, { resetForm }) => {
       try {
-        setLoading(true);
+        showLoading();
 
         const uid = uuidv4();
         let picture = null;
@@ -89,10 +90,10 @@ const Add = () => {
           error: JSON.stringify(error),
         });
       } finally {
-        setLoading(false);
+        hideLoading();
       }
     },
-    [profile, user, photo]
+    [profile, user, photo, showLoading, hideLoading]
   );
 
   const formik = useFormik({

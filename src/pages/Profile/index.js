@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 
 import { DefaultProfilePicture } from '~/src/assets/images';
 import { Header, Input, Button, ImagePicker, Picture } from '~/src/components';
+import AppContext from '~/src/contexts/app';
 import UserContext from '~/src/contexts/user';
 
 import Styles, { Container } from './styles';
@@ -29,12 +30,12 @@ const CELPHONE_OPTIONS = {
 };
 
 const Profile = () => {
+  const { loading, showLoading, hideLoading } = useContext(AppContext);
   const {
     state: { profile, user },
   } = useContext(UserContext);
 
   const [isEditable, setIsEditable] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState(profile?.picture ? { uri: profile.picture } : null);
 
   const isBlocked = useMemo(() => !isEditable || loading, [isEditable, loading]);
@@ -78,6 +79,8 @@ const Profile = () => {
       try {
         const { results, status } = await Geocoder.from(address);
 
+        showLoading();
+
         if (status === 'OK') {
           const [
             {
@@ -114,34 +117,41 @@ const Profile = () => {
 
           formik.setFieldValue('address', formatted_address);
 
-          Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
-            {
-              text: 'OK',
-              onPress: () => {
-                setIsEditable(false);
+          hideLoading();
 
-                setLoading(false);
+          setTimeout(() => {
+            Alert.alert('Atualizado com sucesso', 'Perfil foi atualizado', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setIsEditable(false);
+                },
               },
-            },
-          ]);
+            ]);
+          }, 100);
         } else {
-          setLoading(false);
+          hideLoading();
         }
       } catch (error) {
         await analytics().logEvent('error_register', { error: JSON.stringify(error) });
         console.log('Error on update profile', error);
 
-        Alert.alert('Ocorreu um problema ao atualizar seu perfil', 'Tente novamente em instantes', [
-          {
-            text: 'OK',
-            onPress: () => {
-              setLoading(false);
-            },
-          },
-        ]);
+        hideLoading();
+
+        setTimeout(() => {
+          Alert.alert(
+            'Ocorreu um problema ao atualizar seu perfil',
+            'Tente novamente em instantes',
+            [
+              {
+                text: 'OK',
+              },
+            ]
+          );
+        }, 100);
       }
     },
-    [formik, user, photo]
+    [showLoading, user, photo, formik, hideLoading]
   );
 
   const formik = useFormik({
@@ -163,6 +173,8 @@ const Profile = () => {
   }, [profile]);
 
   useEffect(() => {
+    showLoading();
+
     async function getAddress() {
       const _address = await handleGeolocation(
         profile?.coordinate?.latitude,
@@ -170,6 +182,7 @@ const Profile = () => {
       );
 
       formik.setFieldValue('address', _address);
+      hideLoading();
     }
 
     getAddress();
