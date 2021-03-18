@@ -14,12 +14,10 @@ Os usuários `comuns` serão notificados sobre novos anúncios, através do `One
 
 ## Ferramentas utilizadas
 
-```md
 - React Native
 - Firebase
 - Google Maps
 - Onesignal (somente para `Android`)
-```
 
 ## Padrão de projeto
 
