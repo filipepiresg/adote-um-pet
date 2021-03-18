@@ -35,6 +35,7 @@ const Input = styled.TextInput.attrs({
   flex: 1;
   color: ${Colors.BLACK};
   font-size: 16px;
+  border-radius: 6px;
   height: ${(props) =>
     props.multiline && props.numberOfLines > 1 ? `${props.numberOfLines * 30}px` : 'auto'};
   padding: 10px;
