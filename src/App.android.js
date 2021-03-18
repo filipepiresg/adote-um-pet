@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Config from 'react-native-config';
+import Spinner from 'react-native-loading-spinner-overlay';
 import OneSignal from 'react-native-onesignal';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-root-toast';
 
-import { AppProvider } from '~/src/contexts/app';
-import { UserProvider } from '~/src/contexts/user';
+import { transparentize } from 'polished';
 
-import Application from './index';
+import AppContext from '~/src/contexts/app';
+
+import Routes from './routes';
+import { Colors } from './utils';
 
 export default function App() {
+  const { loading } = useContext(AppContext);
+
   useEffect(() => {
     async function initializeOnesignal() {
       /* O N E S I G N A L   S E T U P */
@@ -34,12 +39,19 @@ export default function App() {
   }, []);
 
   return (
-    <RootSiblingParent>
-      <AppProvider>
-        <UserProvider>
-          <Application />
-        </UserProvider>
-      </AppProvider>
-    </RootSiblingParent>
+    <>
+      <Spinner
+        cancelable={false}
+        color={Colors.BLACK}
+        animation='fade'
+        overlayColor={transparentize(0.6, Colors.PRIMARY)}
+        visible={loading}
+        textContent='Carregando...'
+        textStyle={{ color: Colors.BLACK }}
+      />
+      <RootSiblingParent>
+        <Routes />
+      </RootSiblingParent>
+    </>
   );
 }

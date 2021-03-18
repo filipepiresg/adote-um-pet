@@ -1,44 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { LogBox, Platform, StatusBar } from 'react-native';
 import Config from 'react-native-config';
 import Geocoder from 'react-native-geocoding';
-import Spinner from 'react-native-loading-spinner-overlay';
 
-import { transparentize } from 'polished';
+import { AppProvider } from '~/src/contexts/app';
+import { UserProvider } from '~/src/contexts/user';
 
-import AppContext from '~/src/contexts/app';
-
-import Routes from './routes';
+import App from './App';
 import { Colors } from './utils';
 
 Geocoder.init(Config.GOOGLE_MAPS_API_KEY, { language: 'pt-BR' });
 
 LogBox.ignoreAllLogs(true);
 
-export default () => {
-  const { loading: loadingContext } = useContext(AppContext);
-  const [loading, setLoading] = useState(loadingContext);
+export default () => (
+  <>
+    <StatusBar
+      backgroundColor={Colors.PRIMARY}
+      barStyle={Platform.OS === 'ios' ? 'dark-content' : 'dark-content'}
+    />
 
-  useEffect(() => {
-    setLoading(loadingContext);
-  }, [loadingContext]);
-
-  return (
-    <>
-      <StatusBar
-        backgroundColor={Colors.PRIMARY}
-        barStyle={Platform.OS === 'ios' ? 'dark-content' : 'dark-content'}
-      />
-      <Spinner
-        cancelable={false}
-        color={Colors.BLACK}
-        animation='fade'
-        overlayColor={transparentize(0.6, Colors.PRIMARY)}
-        visible={loading}
-        textContent='Carregando...'
-        textStyle={{ color: Colors.BLACK }}
-      />
-      <Routes />
-    </>
-  );
-};
+    <AppProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </AppProvider>
+  </>
+);

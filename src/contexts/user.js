@@ -58,167 +58,125 @@ export const UserProvider = ({ children }) => {
   }, [state.user]);
 
   const handleLogin = useCallback(
-    ({ email, password }, successCallback = null, failureCallback = null) => {
-      auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(({ user }) => {
-          setState({
-            isAuthenticated: true,
-            loading: false,
-            profile: null,
-            user,
-          });
+    async ({ email, password }, successCallback = null, failureCallback = null) => {
+      try {
+        const { user } = await auth().signInWithEmailAndPassword(email, password);
 
-          analytics()
-            .logEvent('login', {
-              user: JSON.stringify(user),
-            })
-            .finally(() => {
-              hideLoading();
-
-              setTimeout(() => {
-                if (successCallback) successCallback();
-              }, 100);
-            });
-        })
-        .catch((error) => {
-          console.log('Error on login', error);
-
-          analytics()
-            .logEvent('error_login', { error: JSON.stringify(error) })
-            .finally(() => {
-              hideLoading();
-
-              setTimeout(() => {
-                if (failureCallback) failureCallback();
-              }, 100);
-            });
+        await analytics().logEvent('login', {
+          user: JSON.stringify(user),
         });
+
+        setState({
+          isAuthenticated: true,
+          loading: false,
+          profile: null,
+          user,
+        });
+
+        hideLoading();
+
+        setTimeout(() => {
+          if (successCallback) successCallback();
+        }, 100);
+      } catch (error) {
+        console.log('Error on login', error);
+
+        await analytics().logEvent('error_login', { error: JSON.stringify(error) });
+
+        hideLoading();
+
+        setTimeout(() => {
+          if (failureCallback) failureCallback();
+        }, 100);
+      }
     },
     [hideLoading]
   );
 
   const handleLogout = useCallback(
-    (successCallback = null, failureCallback = null) => {
-      auth()
-        .signOut()
-        .then(() => {
-          analytics()
-            .logEvent('logout')
-            .finally(() => {
-              hideLoading();
+    async (successCallback = null, failureCallback = null) => {
+      try {
+        await auth().signOut();
 
-              setTimeout(() => {
-                if (successCallback) successCallback();
-              }, 100);
-            });
+        await analytics().logEvent('logout');
 
-          setState({
-            isAuthenticated: false,
-            loading: false,
-            profile: null,
-            user: null,
-          });
-        })
-        .catch((error) => {
-          console.log('Error on logout', error);
-
-          analytics()
-            .logEvent('error_logout', { error: JSON.stringify(error) })
-            .finally(() => {
-              hideLoading();
-
-              setTimeout(() => {
-                if (failureCallback) failureCallback();
-              }, 100);
-            });
+        setState({
+          isAuthenticated: false,
+          loading: false,
+          profile: null,
+          user: null,
         });
+
+        hideLoading();
+
+        setTimeout(() => {
+          if (successCallback) successCallback();
+        }, 100);
+      } catch (error) {
+        console.log('Error on logout', error);
+
+        await analytics().logEvent('error_logout', { error: JSON.stringify(error) });
+        hideLoading();
+
+        setTimeout(() => {
+          if (failureCallback) failureCallback();
+        }, 100);
+      }
     },
     [hideLoading]
   );
 
   const handleRegister = useCallback(
-    (payload, successCallback = null, failureCallback = null) => {
-      auth()
-        .createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(({ user }) => {
-          let picture = null;
-          let task = null;
+    async (payload, successCallback = null, failureCallback = null) => {
+      try {
+        const { user } = await auth().createUserWithEmailAndPassword(
+          payload.email,
+          payload.password
+        );
 
-          if (payload?.picture?.uri) {
-            const reference = storage().ref(`users/${user.uid}.png`);
+        let picture = null;
 
-            task = reference.putFile(payload.picture.uri, { cacheControl: 'no-store' });
-            picture = reference.toString();
-          }
+        if (payload?.picture?.uri) {
+          const reference = storage().ref(`users/${user.uid}.png`);
 
-          firestore()
-            .collection('users')
-            .doc(user.uid)
-            .set({
-              coordinate: payload.coordinate,
-              description: payload.description,
-              name: payload.name,
-              phone: payload.phone,
-              picture,
-            })
-            .then(() => {
-              if (task) {
-                task.then(() => {
-                  setState({
-                    isAuthenticated: true,
-                    loading: false,
-                    profile: null,
-                    user,
-                  });
+          await reference.putFile(payload.picture.uri, { cacheControl: 'no-store' });
+          picture = reference.toString();
+        }
 
-                  analytics()
-                    .logEvent('sign_up', {
-                      user: JSON.stringify(user),
-                    })
-                    .finally(() => {
-                      hideLoading();
-
-                      setTimeout(() => {
-                        if (successCallback) successCallback();
-                      }, 100);
-                    });
-                });
-              } else {
-                setState({
-                  isAuthenticated: true,
-                  loading: false,
-                  profile: null,
-                  user,
-                });
-
-                analytics()
-                  .logEvent('sign_up', {
-                    user: JSON.stringify(user),
-                  })
-                  .finally(() => {
-                    hideLoading();
-
-                    setTimeout(() => {
-                      if (successCallback) successCallback();
-                    }, 100);
-                  });
-              }
-            });
-        })
-        .catch((error) => {
-          console.log('Error on register', error);
-
-          analytics()
-            .logEvent('error_register', { error: JSON.stringify(error) })
-            .finally(() => {
-              hideLoading();
-
-              setTimeout(() => {
-                if (failureCallback) failureCallback();
-              }, 100);
-            });
+        await firestore().collection('users').doc(user.uid).set({
+          coordinate: payload.coordinate,
+          description: payload.description,
+          name: payload.name,
+          phone: payload.phone,
+          picture,
         });
+
+        await analytics().logEvent('sign_up', {
+          user: JSON.stringify(user),
+        });
+
+        setState({
+          isAuthenticated: true,
+          loading: false,
+          profile: null,
+          user,
+        });
+
+        hideLoading();
+
+        setTimeout(() => {
+          if (successCallback) successCallback();
+        }, 100);
+      } catch (error) {
+        console.log('Error on register', error);
+
+        await analytics().logEvent('error_register', { error: JSON.stringify(error) });
+        hideLoading();
+
+        setTimeout(() => {
+          if (failureCallback) failureCallback();
+        }, 100);
+      }
     },
     [hideLoading]
   );
