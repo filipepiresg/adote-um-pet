@@ -16,9 +16,13 @@ const INITIAL_STATE = {
 };
 const UserContext = createContext({
   state: INITIAL_STATE,
-  handleLogin: ({ email: _email, password: _password }, _successCallback, _failureCallback) => {},
-  handleLogout: (_successCallback, _failureCallback) => {},
-  handleRegister: (_payload, _successCallback, _failureCallback) => {},
+  handleLogin: async (
+    { email: _email, password: _password },
+    _successCallback,
+    _failureCallback
+  ) => {},
+  handleLogout: async (_successCallback, _failureCallback) => {},
+  handleRegister: async (_payload, _successCallback, _failureCallback) => {},
 });
 
 export const UserProvider = ({ children }) => {

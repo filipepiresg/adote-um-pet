@@ -3,9 +3,11 @@ import { Alert, Pressable } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { MaskService } from 'react-native-masked-text';
 
+import analytics from '@react-native-firebase/analytics';
 import { useNavigation } from '@react-navigation/native';
 
 import { useFormik } from 'formik';
+import { get } from 'lodash';
 import * as Yup from 'yup';
 
 import { DefaultProfilePicture } from '~/src/assets/images';
@@ -58,16 +60,19 @@ const SignUp = () => {
   const photoRef = useRef();
 
   const handleSubmit = useCallback(
-    (values) => {
-      Geocoder.from(values.address).then(({ results, status }) => {
+    async (values) => {
+      try {
         showLoading();
 
+        const { results, status } = await Geocoder.from(values.address);
+
         if (status === 'OK') {
-          const [
-            {
-              geometry: { location },
-            },
-          ] = results.filter(({ types }) => types.includes('street_address'));
+          const [result] = results.filter(({ types }) => types.includes('street_address'));
+          const location = get(result, 'geometry.location', null);
+
+          if (location === null) {
+            throw new Error('location not found');
+          }
 
           handleRegister(
             {
@@ -99,10 +104,12 @@ const SignUp = () => {
             }
           );
         } else {
+          await analytics().logEvent('error_signup_location', { status });
+
           hideLoading();
 
           setTimeout(() => {
-            Alert.alert('Aconteceu um problema', 'Não foi possível encontrar sua localização', [
+            Alert.alert('Endereço não encontrado', 'Altere o endereço e tente novamente', [
               {
                 text: 'OK',
                 onPress: () => {
@@ -112,7 +119,21 @@ const SignUp = () => {
             ]);
           }, 100);
         }
-      });
+      } catch (error) {
+        console.log('Error on get location', error);
+
+        await analytics().logEvent('error_signup_geolocation', { error: JSON.stringify(error) });
+
+        hideLoading();
+
+        setTimeout(() => {
+          Alert.alert('Aconteceu um problema', 'Não foi possível encontrar sua localização', [
+            {
+              text: 'OK',
+            },
+          ]);
+        }, 100);
+      }
     },
     [handleRegister, hideLoading, navigation, photo, showLoading]
   );
