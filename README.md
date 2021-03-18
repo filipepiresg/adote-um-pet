@@ -4,7 +4,7 @@ Por: _**Filipe Pires Guimarães**_
 
 ## Descrição
 
-Esse projeto foi desenvolvido para a disciplina **TCC** da _Universidade Federal de Campina Grande (UFCG)_, nele foi pensado em um aplicativo para dispositivos móveis para auxiliar o gerenciamento/divulgação de pets que estão disponíveis para adoção.
+Esse projeto foi desenvolvido para a disciplina **TCC** da _Universidade Federal de Campina Grande (UFCG)_, nesse intuito foi desenvolvido um aplicativo para dispositivos móveis, que auxilia o gerenciamento/divulgação de pets que estão disponíveis para a adoção.
 
 Foi pensado que usuários `comuns` não precisariam logar na aplicação, nisso ele tem como visualizar o mapa da localização das organizações cadastradas e uma lista de pets disponíveis para adoção, e através dessa lista é possível ainda ligar para tal organização. Para os usuários `organização`, seria necessário cadastrar-se, para que seja possível adicionar novos anúncios de pets disponíveis para adoção, para atualizar seus dados, e também para visualizar o mapa.
 
