@@ -49,6 +49,7 @@ const SignUp = () => {
   const { showLoading, hideLoading } = useContext(AppContext);
 
   const [photo, setPhoto] = useState(null);
+  const [isShowPassword, setShowPassword] = useState(false)
 
   const nameRef = useRef();
   const addressRef = useRef();
@@ -226,7 +227,7 @@ const SignUp = () => {
 
         <Input
           ref={emailRef}
-          title='E-mail da conta'
+          title='E-mail'
           error={formik.touched.email ? formik.errors.email : undefined}
           value={formik.values.email}
           onChangeText={formik.handleChange('email')}
@@ -240,7 +241,7 @@ const SignUp = () => {
 
         <Input
           ref={passwordRef}
-          title='Senha da conta'
+          title='Senha'
           error={formik.touched.password ? formik.errors.password : undefined}
           value={formik.values.password}
           onChangeText={formik.handleChange('password')}
@@ -251,7 +252,11 @@ const SignUp = () => {
           autoCapitalize='none'
           keyboardType='default'
           placeholder='•••••'
-          secureTextEntry
+          secureTextEntry={!isShowPassword}
+          hasPasswordShow
+          changeVibility={() => {
+            setShowPassword(!isShowPassword);
+          }}
           returnKeyType='done'
         />
 
